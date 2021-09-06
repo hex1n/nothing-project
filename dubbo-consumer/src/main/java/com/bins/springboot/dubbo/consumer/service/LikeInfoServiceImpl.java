@@ -1,5 +1,6 @@
 package com.bins.springboot.dubbo.consumer.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bins.springboot.dubbo.consumer.constant.LikeTypeEnum;
 import com.bins.springboot.dubbo.consumer.constant.LikedStatusEnum;
 import com.bins.springboot.dubbo.consumer.constant.RedisKeyUtils;
@@ -14,10 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.bins.springboot.dubbo.consumer.constant.RedisKeyUtils.*;
 
@@ -102,15 +100,26 @@ public class LikeInfoServiceImpl implements LikeInfoService {
     @Override
     public List<LikeInfo> getLikedDataFromRedis() {
         List<LikeInfo> likeInfos = Lists.newArrayList();
+        List<String> keys = Lists.newArrayList();
         Map data = redisTemplate.boundHashOps(LIKE_INFO_KEY).entries();
         if (data != null && data.size() > 0) {
             Set<String> keySet = data.keySet();
             for (String key : keySet) {
+                keys.add(key);
                 LikeInfo likeInfo = (LikeInfo) data.get(key);
                 if (likeInfo != null) {
                     likeInfos.add(likeInfo);
                 }
             }
+        }
+        // todo 插入数据库
+        /**
+         * 插入数据库成功后删除缓存中的记录----> 如果缓存删除失败/避免数据库重复插入数据,缓存数据的操作时间大于数据库中的最大一条数据时间才能插入
+         */
+        log.info("keys:{}", JSON.toJSONString(keys));
+        for (String key : keys) {
+            Long delete = redisTemplate.opsForHash().delete(LIKE_INFO_KEY,key);
+            log.info("deleteCount:{}", delete);
         }
         return likeInfos;
     }
