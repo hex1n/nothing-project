@@ -1,9 +1,12 @@
 package com.bins.springboot.dubbo.consumer.Test;
 
+import com.google.common.collect.Maps;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author hex1n
@@ -22,5 +25,11 @@ public class BloomFilterTest {
         System.out.println(bloomFilter.mightContain("鑫"));
         System.out.println(bloomFilter.mightContain("Java"));
 
+        HashMap<Object, Object> map = Maps.newHashMap();
+        map.put(null,null);
+        System.out.println(map);
+        ConcurrentMap<Object, Object> cmap = Maps.newConcurrentMap();
+        cmap.put("1",null);
+        System.out.println(cmap);
     }
 }
