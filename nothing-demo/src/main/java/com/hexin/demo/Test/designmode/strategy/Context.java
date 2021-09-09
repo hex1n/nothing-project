@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.Test.designmode.strategy;
+package com.hexin.demo.Test.designmode.strategy;
 
 /**
  * @author hex1n

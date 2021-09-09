@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.entity;
+package com.hexin.demo.entity;
 
 import lombok.Data;
 

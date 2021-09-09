@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.service;
+package com.hexin.demo.service;
 
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;

@@ -1,4 +1,3 @@
-package com.hexin.springboot.dubbo.consumer.service;
 
 /**
  * @author hex1n

@@ -1,12 +1,12 @@
-package com.hexin.springboot.dubbo.consumer.service;
+package com.hexin.demo.service;
 
 import com.alibaba.fastjson.JSON;
-import com.hexin.springboot.dubbo.consumer.constant.LikeTypeEnum;
-import com.hexin.springboot.dubbo.consumer.constant.LikedStatusEnum;
-import com.hexin.springboot.dubbo.consumer.constant.RedisKeyUtils;
-import com.hexin.springboot.dubbo.consumer.entity.LikeCount;
-import com.hexin.springboot.dubbo.consumer.entity.LikeInfo;
 import com.google.common.collect.Lists;
+import com.hexin.demo.constant.LikeTypeEnum;
+import com.hexin.demo.constant.LikedStatusEnum;
+import com.hexin.demo.constant.RedisKeyUtils;
+import com.hexin.demo.entity.LikeCount;
+import com.hexin.demo.entity.LikeInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -15,9 +15,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static com.hexin.springboot.dubbo.consumer.constant.RedisKeyUtils.*;
+import static com.hexin.demo.constant.RedisKeyUtils.*;
+
 
 /**
  * @Author hex1n
@@ -118,7 +122,7 @@ public class LikeInfoServiceImpl implements LikeInfoService {
          */
         log.info("keys:{}", JSON.toJSONString(keys));
         for (String key : keys) {
-            Long delete = redisTemplate.opsForHash().delete(LIKE_INFO_KEY,key);
+            Long delete = redisTemplate.opsForHash().delete(LIKE_INFO_KEY, key);
             log.info("deleteCount:{}", delete);
         }
         return likeInfos;

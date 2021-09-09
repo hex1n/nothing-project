@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.Test;
+package com.hexin.demo.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class EventSource {
     }
     protected  void actionPerformed() throws InterruptedException {
         semaphore.acquire(1);
-        ClickEvent clickEvent = new ClickEvent(this);
+       com.hexin.demo.Test.ClickEvent clickEvent = new ClickEvent(this);
         for (ClickEventListener listener : listeners) {
             listener.clickEvent(clickEvent);
         }

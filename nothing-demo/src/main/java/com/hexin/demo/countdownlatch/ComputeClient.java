@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.countdownlatch;
+package com.hexin.demo.countdownlatch;
 
 import com.google.common.collect.Maps;
 import org.springframework.scheduling.annotation.Async;

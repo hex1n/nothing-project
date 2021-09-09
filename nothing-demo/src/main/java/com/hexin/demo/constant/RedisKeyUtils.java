@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.constant;
+package com.hexin.demo.constant;
 
 import org.apache.commons.lang3.StringUtils;
 

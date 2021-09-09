@@ -1,6 +1,6 @@
-package com.hexin.springboot.dubbo.consumer.controller;
+package com.hexin.demo.controller;
 
-import com.hexin.springboot.dubbo.consumer.Test.WriteText;
+import com.hexin.demo.Test.WriteText;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,8 +9,6 @@ import java.io.IOException;
 @RestController
 public class HelloController {
 
-	/*@DubboReference
-	private UserApi userApi;*/
 
     @RequestMapping("/hello")
     public String helloWorld() throws IOException {

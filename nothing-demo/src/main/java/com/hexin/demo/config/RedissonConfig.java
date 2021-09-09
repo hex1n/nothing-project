@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.config;
+package com.hexin.demo.config;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;

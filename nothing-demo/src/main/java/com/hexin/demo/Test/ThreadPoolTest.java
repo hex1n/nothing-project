@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.Test;
+package com.hexin.demo.Test;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

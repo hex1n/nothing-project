@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.countdownlatch;
+package com.hexin.demo.countdownlatch;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

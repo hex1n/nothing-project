@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.constant;
+package com.hexin.demo.constant;
 
 import lombok.Getter;
 

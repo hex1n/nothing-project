@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.Test.arithmetic;
+package com.hexin.demo.Test.arithmetic;
 
 import java.util.Arrays;
 import java.util.HashSet;

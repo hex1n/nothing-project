@@ -1,4 +1,3 @@
-package com.hexin.springboot.dubbo.consumer.config;
 
 import java.io.BufferedWriter;
 import java.io.File;

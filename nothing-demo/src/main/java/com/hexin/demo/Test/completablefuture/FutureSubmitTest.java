@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.Test.completablefuture;
+package com.hexin.demo.Test.completablefuture;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;

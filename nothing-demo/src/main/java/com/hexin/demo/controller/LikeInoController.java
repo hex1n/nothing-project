@@ -1,10 +1,10 @@
-package com.hexin.springboot.dubbo.consumer.controller;
+package com.hexin.demo.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.hexin.springboot.dubbo.consumer.constant.LikedStatusEnum;
-import com.hexin.springboot.dubbo.consumer.entity.LikeCount;
-import com.hexin.springboot.dubbo.consumer.entity.LikeInfo;
-import com.hexin.springboot.dubbo.consumer.service.LikeInfoService;
+import com.hexin.demo.constant.LikedStatusEnum;
+import com.hexin.demo.entity.LikeCount;
+import com.hexin.demo.entity.LikeInfo;
+import com.hexin.demo.service.LikeInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

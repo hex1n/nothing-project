@@ -1,7 +1,7 @@
-package com.hexin.springboot.dubbo.consumer.service;
+package com.hexin.demo.service;
 
-import com.hexin.springboot.dubbo.consumer.entity.LikeCount;
-import com.hexin.springboot.dubbo.consumer.entity.LikeInfo;
+import com.hexin.demo.entity.LikeCount;
+import com.hexin.demo.entity.LikeInfo;
 
 import java.util.List;
 

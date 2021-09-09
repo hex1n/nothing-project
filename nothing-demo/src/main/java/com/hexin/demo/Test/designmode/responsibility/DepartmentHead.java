@@ -1,11 +1,11 @@
-package com.hexin.springboot.dubbo.consumer.Test.designmode.responsibility;
+package com.hexin.demo.Test.designmode.responsibility;
 
 /**
  * @author hex1n
  * @date 2021/3/31 10:37
  * @description
  */
-public class DepartmentHead extends Leader{
+public class DepartmentHead extends Leader {
 
     @Override
     public void handleRequest(int leaveDays) {

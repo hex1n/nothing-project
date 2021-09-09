@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.Test.designmode.simplefactory;
+package com.hexin.demo.Test.designmode.simplefactory;
 
 /**
  * @author hex1n

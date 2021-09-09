@@ -1,6 +1,6 @@
-package com.hexin.springboot.dubbo.consumer.mapper;
+package com.hexin.demo.mapper;
 
-import com.hexin.springboot.dubbo.consumer.entity.LikeCount;
+import com.hexin.demo.entity.LikeCount;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

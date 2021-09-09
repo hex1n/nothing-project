@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.Test.designmode.responsibility;
+package com.hexin.demo.Test.designmode.responsibility;
 
 import lombok.Getter;
 import lombok.Setter;

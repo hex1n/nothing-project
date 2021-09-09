@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.Test.designmode.responsibility;
+package com.hexin.demo.Test.designmode.responsibility;
 
 /**
  * @author hex1n
@@ -8,8 +8,8 @@ package com.hexin.springboot.dubbo.consumer.Test.designmode.responsibility;
 public class ChainOfResponsibilityPattern {
 
     public static void main(String[] args) {
-        ClassAdviser classAdviser = new ClassAdviser();
-        DepartmentHead departmentHead = new DepartmentHead();
+       com.hexin.demo.Test.designmode.responsibility.ClassAdviser classAdviser = new ClassAdviser();
+       com.hexin.demo.Test.designmode.responsibility.DepartmentHead departmentHead = new DepartmentHead();
         classAdviser.setNext(departmentHead);
         classAdviser.handleRequest(2);
     }

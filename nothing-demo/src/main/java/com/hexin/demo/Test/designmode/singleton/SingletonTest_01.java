@@ -1,4 +1,4 @@
-package com.hexin.springboot.dubbo.consumer.Test.designmode.singleton;
+package com.hexin.demo.Test.designmode.singleton;
 
 /**
  * @author hex1n
