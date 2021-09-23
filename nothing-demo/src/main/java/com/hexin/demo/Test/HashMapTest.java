@@ -2,6 +2,7 @@ package com.hexin.demo.Test;
 
 import com.google.common.collect.Maps;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +21,7 @@ public class HashMapTest {
         }
         TimeUnit.SECONDS.sleep(1);
         System.out.println(map.size());
+        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
     }
 
     static class Run implements Runnable {

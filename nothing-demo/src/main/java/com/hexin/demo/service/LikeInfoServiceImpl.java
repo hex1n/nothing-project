@@ -35,6 +35,8 @@ public class LikeInfoServiceImpl implements LikeInfoService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    //todo  点赞这里的lua 脚本 如果在集群环境下,会报 Lua script attempted to access a non local key in a cluster node 不能落在同一个节点----> 需要让 key 落在同一个槽中
+    // 解决办法 因为Redis要求单个Lua脚本操作的key必须在同一个节点上，但是Cluster会将数据自动分布到不同的节点(虚拟的16384个slot，具体看官方文档)。 keySlot算法中，如果key包含{}，就会使用第一个{}内部的字符串作为hash key，这样就可以保证拥有同样{}内部字符串的key就会拥有相同slot。
 
     @Override
     public Long saveLiked2Redis(LikeInfo likeInfo) {
@@ -60,6 +62,7 @@ public class LikeInfoServiceImpl implements LikeInfoService {
         luaScript.setScriptText(script);
         luaScript.setResultType(Long.class);
         List<String> keys = Arrays.asList(LIKE_INFO_KEY, LIKE_INFO_COUNT_KEY, likeInfoKey, getLikeCountRedisKey(insertLikeInfo));
+//        keys = keys.stream().map(key -> "{" + key + "}").collect(Collectors.toList());
         Long count = (Long) redisTemplate.execute(luaScript, keys, insertLikeInfo, increVal);
         return count;
     }
