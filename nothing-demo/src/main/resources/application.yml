@@ -16,3 +16,9 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath*:mapper/**/*Mapper.xml
+
+config:
+  longValue: ${random.uuid}
+
+log:
+    dir: D:\temp\log
