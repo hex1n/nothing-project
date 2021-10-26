@@ -1,5 +1,6 @@
 package com.hexin.demo.Test;
 
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/1/18 15:01
  * @description
  */
+@Slf4j
 public class RedissonTest {
     public static void main(String[] args) {
         Config config = new Config();
@@ -21,23 +23,22 @@ public class RedissonTest {
         RedissonClient redissonClient = Redisson.create(config);
         RBlockingQueue<String> testQueue = redissonClient.getBlockingQueue("test");
         RDelayedQueue<String> delayedQueue = redissonClient.getDelayedQueue(testQueue);
-        new Thread(()->{
-            for (;;){
-                try{
+        new Thread(() -> {
+            for (; ; ) {
+                try {
                     String ele = testQueue.peek();
-                    if (Objects.equals(ele,"ffffff1")){
+                    if (Objects.equals(ele, "ffffff1")) {
                         testQueue.remove(ele);
                     }
                     System.err.println(testQueue.take());
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
 
-        for (int i = 0; i <=5; i++) {
-            delayedQueue.offer("ffffff"+i,20, TimeUnit.SECONDS);
+        for (int i = 0; i <= 5; i++) {
+            delayedQueue.offer("ffffff" + i, 20, TimeUnit.SECONDS);
         }
-        delayedQueue.offer("ffffff0",20, TimeUnit.SECONDS);
     }
 }
