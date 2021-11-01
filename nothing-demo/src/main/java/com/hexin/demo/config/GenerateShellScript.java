@@ -1,3 +1,4 @@
+package com.hexin.demo.config;
 
 import java.io.BufferedWriter;
 import java.io.File;

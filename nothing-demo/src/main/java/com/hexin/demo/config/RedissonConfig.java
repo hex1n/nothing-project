@@ -28,14 +28,15 @@ public class RedissonConfig {
 
     @Value("${spring.redis.database}")
     private Integer database;
+    @Value("${spring.redis.password}")
+    private String password;
 
     @Bean
     public Config config() {
         Config config = new Config();
         String address = "redis://" + redisHost + ":" + port;
-        String blankPassword = "";
-        if (StringUtils.isNotBlank(blankPassword)) {
-            config.useSingleServer().setDatabase(database).setAddress(address).setPassword(blankPassword);
+        if (StringUtils.isNotBlank(password)) {
+            config.useSingleServer().setDatabase(database).setAddress(address).setPassword(password);
         } else {
             config.useSingleServer().setDatabase(database).setAddress(address);
         }

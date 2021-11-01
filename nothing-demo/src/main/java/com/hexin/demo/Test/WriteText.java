@@ -1,5 +1,6 @@
 package com.hexin.demo.Test;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @Author hex1n
@@ -17,7 +18,7 @@ public class WriteText {
         file.createNewFile();
         // write 解决中文乱码问题
         // FileWriter fw = new FileWriter(file, true);
-        OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+        OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
         BufferedWriter bw = new BufferedWriter(fw);
         String[] split = inputStr.split(",");
         for (int i = 0; i < split.length; i++) {
