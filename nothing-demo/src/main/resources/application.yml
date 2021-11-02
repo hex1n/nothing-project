@@ -22,4 +22,11 @@ config:
   longValue: ${random.uuid}
 
 log:
-    dir: D:\temp\log
+  dir: D:\temp\log
+management:
+  endpoint:
+    health:
+      show-details: always
+#  http://localhost:8000/actuator/health 检测服务
+#  http://localhost:8000/actuator   可用检测点连接
+
