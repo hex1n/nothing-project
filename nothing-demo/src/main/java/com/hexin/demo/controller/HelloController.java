@@ -13,8 +13,6 @@ import java.sql.DriverManager;
 @Slf4j
 public class HelloController {
 
-    @Value("${config.longValue}")
-    private String value;
     @Value("${spring.datasource.url}")
     private String url;
     @Value("${spring.datasource.username}")
@@ -30,8 +28,7 @@ public class HelloController {
         }catch (Exception e){
             log.error("leads scoring healthCheck mysql error:",e);
         }
-        System.out.println(value);
-        return value+"";
+        return "";
     }
 
 }

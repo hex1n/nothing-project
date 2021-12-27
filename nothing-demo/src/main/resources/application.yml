@@ -2,7 +2,7 @@ spring:
   application:
     name: nothing-demo
   redis:
-    database: 0
+    database: 1
     host: 127.0.0.1
     port: 6379
     password:
@@ -12,14 +12,11 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=UTC
     hikari.driver-class-name: com.mysql.jdbc.Driver
 server:
-  port: 8000
+  port: 8001
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath*:mapper/**/*Mapper.xml
-
-config:
-  longValue: ${random.uuid}
 
 log:
   dir: D:\temp\log

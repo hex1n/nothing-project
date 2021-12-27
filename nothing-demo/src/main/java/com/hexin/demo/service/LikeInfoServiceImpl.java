@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -39,7 +40,9 @@ public class LikeInfoServiceImpl implements LikeInfoService {
     // 解决办法 因为Redis要求单个Lua脚本操作的key必须在同一个节点上，但是Cluster会将数据自动分布到不同的节点(虚拟的16384个slot，具体看官方文档)。 keySlot算法中，如果key包含{}，就会使用第一个{}内部的字符串作为hash key，这样就可以保证拥有同样{}内部字符串的key就会拥有相同slot。
 
     @Override
+    @Async("commentAsync")
     public Long saveLiked2Redis(LikeInfo likeInfo) {
+        System.out.println(Thread.currentThread().getName());
         checkLikeInfo(likeInfo);
         String script = "redis.call('HSET', KEYS[1],KEYS[3],ARGV[1]) return redis.call('hincrBy', KEYS[2],KEYS[4],ARGV[2])";
         LikeInfo insertLikeInfo = packageLikeInfo(likeInfo);
@@ -48,7 +51,9 @@ public class LikeInfoServiceImpl implements LikeInfoService {
     }
 
     @Override
+    @Async("commentAsync")
     public Long saveUnLike2Redis(LikeInfo likeInfo) {
+        System.out.println(Thread.currentThread().getName());
         checkLikeInfo(likeInfo);
         String script = "local count=tonumber(redis.call('hget', KEYS[2],KEYS[4])) if type(count)=='number' and count>0 then redis.call('HSET', KEYS[1],KEYS[3],ARGV[1]) return redis.call('hincrBy', KEYS[2],KEYS[4],ARGV[2]) end return 0 ";
         LikeInfo insertLikeInfo = packageLikeInfo(likeInfo);
