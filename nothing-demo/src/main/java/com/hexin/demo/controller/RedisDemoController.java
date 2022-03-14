@@ -1,16 +1,18 @@
 package com.hexin.demo.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.hexin.demo.ResultBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @Author hex1n
@@ -83,4 +85,46 @@ public class RedisDemoController {
         }
 
     }
+
+    @GetMapping("getRedisKey")
+    public ResultBean getRedisKey() throws IOException {
+        HashSet<String> set = Sets.newHashSet();
+        HashSet<String> tagIdset = Sets.newHashSet();
+        HashOperations hashOperations = redisTemplate.opsForHash();
+
+        int count = 0;
+        ScanOptions scanOptions = ScanOptions.scanOptions().match("*").count(2000).build();
+        RedisSerializer<String> redisSerializer = (RedisSerializer<String>) redisTemplate.getKeySerializer();
+        Cursor cursor = (Cursor) redisTemplate.executeWithStickyConnection((RedisCallback) redisConnection ->
+                new ConvertingCursor<>(redisConnection.scan(scanOptions), redisSerializer::deserialize));
+        while (cursor.hasNext() && count <= 2000) {
+            String key = String.valueOf(cursor.next());
+            Map<String, String> entries = hashOperations.entries(key);
+            Set<String> keySet = entries.keySet();
+            tagIdset.addAll(keySet);
+            String[] keys = key.split("_");
+            set.add(keys[0]);
+            count++;
+        }
+        log.info("ssssssssssss:{}", JSON.toJSONString(tagIdset));
+        cursor.close();
+
+        //关闭cursor
+
+        return ResultBean.success(set);
+    }
+
+
+    /**
+     * redis 发布订阅
+     *
+     * @return
+     */
+    @GetMapping("/redisPub")
+    public ResultBean redisPub() {
+        redisTemplate.convertAndSend("redisPublish", "hello");
+
+        return ResultBean.success();
+    }
+
 }
