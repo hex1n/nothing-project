@@ -52,6 +52,7 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.addMessageListener(listenerAdapter, new PatternTopic("redisPublish"));//配置要订阅的订阅项
+        container.addMessageListener(listenerAdapter, new PatternTopic("redisPublish2"));//配置要订阅的订阅项
         return container;
     }
 }

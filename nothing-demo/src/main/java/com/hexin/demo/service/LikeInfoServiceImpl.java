@@ -13,13 +13,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.hexin.demo.constant.RedisKeyUtils.*;
 
@@ -40,17 +36,36 @@ public class LikeInfoServiceImpl implements LikeInfoService {
     // 解决办法 因为Redis要求单个Lua脚本操作的key必须在同一个节点上，但是Cluster会将数据自动分布到不同的节点(虚拟的16384个slot，具体看官方文档)。 keySlot算法中，如果key包含{}，就会使用第一个{}内部的字符串作为hash key，这样就可以保证拥有同样{}内部字符串的key就会拥有相同slot。
 
     @Override
-    @Async("commentAsync")
-    public Long saveLiked2Redis(LikeInfo likeInfo) {
+    public LikeInfo saveLiked2Redis(LikeInfo likeInfo) {
         System.out.println(Thread.currentThread().getName());
         checkLikeInfo(likeInfo);
-        String script = "redis.call('HSET', KEYS[1],KEYS[3],ARGV[1]) return redis.call('hincrBy', KEYS[2],KEYS[4],ARGV[2])";
+        String key="liked:businessCard:"+getLikeInfoRedisKey(likeInfo);
+        // 如果redis 挂了， 给redis 中设置一个标志位， 如果标志位没有了表示redis 挂了， 先去点赞记录表中取所以人最后一次点赞或取消点赞的记录，把是点赞的人的信息添加到redis中
+        Object restart =  redisTemplate.opsForValue().get("restart");
+        if (restart==null){
+            // redis 挂了 查询数据库中的点赞记录
+            List<String> likedIds = Arrays.asList("10083", "10084", "10088");
+            redisTemplate.opsForValue().set("restart","1");
+            redisTemplate.opsForSet().add(key,likedIds.toArray());
+        }
+        Boolean isMember = redisTemplate.opsForSet().isMember(key, likeInfo.getLikedPostId());
+        if (isMember){
+            //取消点赞
+            Long unliked = redisTemplate.opsForSet().remove(key, likeInfo.getLikedPostId());
+        }else {
+            //点赞
+            Long liked = redisTemplate.opsForSet().add(key, likeInfo.getLikedPostId());
+        }
+//        String script = "redis.call('HSET', KEYS[1],KEYS[3],ARGV[1]) return redis.call('hincrBy', KEYS[2],KEYS[4],ARGV[2])";
         LikeInfo insertLikeInfo = packageLikeInfo(likeInfo);
-        Long count = executeLuaScriptAndGetCount(insertLikeInfo, script, 1);
-        return count;
+//        Long count = executeLuaScriptAndGetCount(insertLikeInfo, script, 1);
+        Long count = redisTemplate.opsForSet().size(key);
+        insertLikeInfo.setLikeCount(count);
+        insertLikeInfo.setLikedStatus(isMember?LikedStatusEnum.UNLIKE.getCode():LikedStatusEnum.LIKE.getCode());
+        return insertLikeInfo;
     }
 
-    @Override
+   /* @Override
     @Async("commentAsync")
     public Long saveUnLike2Redis(LikeInfo likeInfo) {
         System.out.println(Thread.currentThread().getName());
@@ -59,14 +74,14 @@ public class LikeInfoServiceImpl implements LikeInfoService {
         LikeInfo insertLikeInfo = packageLikeInfo(likeInfo);
         Long count = executeLuaScriptAndGetCount(insertLikeInfo, script, -1);
         return count;
-    }
+    }*/
 
     private Long executeLuaScriptAndGetCount(LikeInfo insertLikeInfo, String script, int increVal) {
         String likeInfoKey = getLikeInfoRedisKey(insertLikeInfo) + DELIMITER + insertLikeInfo.getOperationTime();
         DefaultRedisScript<Long> luaScript = new DefaultRedisScript<>();
         luaScript.setScriptText(script);
         luaScript.setResultType(Long.class);
-        List<String> keys = Arrays.asList(LIKE_INFO_KEY, LIKE_INFO_COUNT_KEY, likeInfoKey, getLikeCountRedisKey(insertLikeInfo));
+        List<String> keys = Arrays.asList(LIKE_INFO_KEY, LIKE_INFO_COUNT_KEY, likeInfoKey, null);
 //        keys = keys.stream().map(key -> "{" + key + "}").collect(Collectors.toList());
         Long count = (Long) redisTemplate.execute(luaScript, keys, insertLikeInfo, increVal);
         return count;
@@ -84,24 +99,12 @@ public class LikeInfoServiceImpl implements LikeInfoService {
     private String getLikeInfoRedisKey(LikeInfo likeInfo) {
         return RedisKeyUtils.getLikeKey(
                 likeInfo.getLikedMemberId(),
-                likeInfo.getLikedPostId(),
-                likeInfo.getLikedType(), likeInfo.getLikedTypeId());
-    }
-
-    private String getLikeCountRedisKey(LikeInfo likeInfo) {
-        return RedisKeyUtils.getLikeKey(
-                likeInfo.getLikedMemberId(),
-                null,
                 likeInfo.getLikedType(), likeInfo.getLikedTypeId());
     }
 
     private void checkLikeInfo(LikeInfo likeInfo) {
         if (likeInfo == null) {
             throw new IllegalArgumentException("incoming likeInfo is null");
-        }
-        List<Integer> legalCodes = Arrays.asList(LikedStatusEnum.LIKE.getCode(), LikedStatusEnum.UNLIKE.getCode());
-        if (!legalCodes.contains(likeInfo.getLikedStatus())) {
-            throw new IllegalArgumentException("传入点赞参数不合法");
         }
         if (StringUtils.isAnyBlank(likeInfo.getLikedMemberId(), likeInfo.getLikedPostId(),
                 likeInfo.getLikedType(), likeInfo.getLikedTypeId())) {

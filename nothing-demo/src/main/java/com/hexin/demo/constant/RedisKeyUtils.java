@@ -16,8 +16,8 @@ public class RedisKeyUtils {
     public static String LIKE_INFO_KEY = "LIKE_INFO";
     public static String LIKE_INFO_COUNT_KEY = "LIKE_INFO_COUNT";
 
-    public static String getLikeKey(String likedMemberId, String likedPostId, String likedType, String likedTypeId) {
-        List<String> params = Arrays.asList(likedMemberId, likedPostId, likedType, likedTypeId);
+    public static String getLikeKey(String likedMemberId, String likedType, String likedTypeId) {
+        List<String> params = Arrays.asList(likedMemberId, likedType, likedTypeId);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < params.size(); i++) {
             if (StringUtils.isBlank(params.get(i))) {
@@ -32,7 +32,7 @@ public class RedisKeyUtils {
     }
 
     public static void main(String[] args) {
-        String likeOrDisLikeKey = getLikeKey("1", "2", "5", "4");
+        String likeOrDisLikeKey = getLikeKey( "2", "5", "4");
         System.out.println(likeOrDisLikeKey);
     }
 }

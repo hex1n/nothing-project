@@ -13,18 +13,12 @@ import java.util.List;
 public interface LikeInfoService {
 
     /**
-     * 点赞
+     * 点赞/取消点赞
      *
      * @param likeInfo
      */
-    Long saveLiked2Redis(LikeInfo likeInfo);
+    LikeInfo saveLiked2Redis(LikeInfo likeInfo);
 
-    /**
-     * 取消点赞
-     *
-     * @param likeInfo
-     */
-    Long saveUnLike2Redis(LikeInfo likeInfo);
 
     /**
      * 获取Redis中存储的所有点赞数据

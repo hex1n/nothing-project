@@ -4,7 +4,6 @@ import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/3/29 10:24
  * @description
  */
-@Service
+//@Service
 public class RedisDelayedQueue {
 
     @Autowired

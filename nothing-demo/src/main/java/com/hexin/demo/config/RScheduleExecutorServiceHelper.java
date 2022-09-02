@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import org.redisson.api.RScheduledExecutorService;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -12,7 +11,7 @@ import java.util.Map;
  * @author nerd
  * @date 2017-08-02 14:49
  */
-@Component
+//@Component
 public class RScheduleExecutorServiceHelper {
     public static final String LOAN_REDIS_QUEUE_KEY = "loan_queue_jobs";
     public static final String LOAN_CONTRACT_REDIS_QUEUE_KEY = "loan_contract_queue_jobs";

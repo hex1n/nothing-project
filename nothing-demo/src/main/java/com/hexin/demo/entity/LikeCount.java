@@ -19,8 +19,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class LikeCount implements Serializable {
 
-    private static final long serialVersionUID = 391878732884195265L;
-
     private String id;
     //被点赞的用户id
     private String likedMemberId;

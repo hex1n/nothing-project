@@ -29,4 +29,9 @@ public class WriteText {
         bw.close();
         fw.close();
     }
+
+    public static void main(String[] args) {
+        String str="606436754978406400";
+        System.out.println(str.length());
+    }
 }

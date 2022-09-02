@@ -2,16 +2,24 @@ package com.hexin.demo.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.hexin.demo.ResultBean;
+import com.hexin.demo.util.RedisStreamUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -25,6 +33,12 @@ public class RedisDemoController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Value("${redis-stream.names:}")
+    private String[] redisStreamNames;
+
+    @Autowired
+    private RedisStreamUtil redisStreamUtil;
 
     /**
      * 排行榜
@@ -127,4 +141,52 @@ public class RedisDemoController {
         return ResultBean.success();
     }
 
+    @GetMapping("/sendTest/{streamName}")
+    public String addStream(@PathVariable String streamName) {
+        Map<String, Object> message = new HashMap<>();
+        message.put("test", "hello redismq");
+        message.put("send time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        return redisStreamUtil.addStream(streamName, message).getValue();
+    }
+
+    @GetMapping("/getStream")
+    public List<MapRecord<String, Object, Object>> getStream(String key) {
+        return redisStreamUtil.getAllStream(key);
+    }
+
+
+    @GetMapping("/groupRead")
+    public void getStreamByGroup(String key, String groupName, String consumerName) {
+        redisStreamUtil.getStreamByGroup(key, groupName, consumerName);
+    }
+
+    @GetMapping("/moreTest/{count}")
+    public void moreAddTest(@PathVariable("count") Integer count) {
+        for (int i = 0; i < count; i++) {
+            Map<String, Object> message1 = new HashMap<>();
+            message1.put("name", "mystream1");
+            message1.put("send time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            Map<String, Object> message2 = new HashMap<>();
+            message2.put("name", "mystream2");
+            message2.put("send time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            redisStreamUtil.addStream(redisStreamNames[0], message1);
+            redisStreamUtil.addStream(redisStreamNames[1], message2);
+        }
+    }
+
+    @Value("${server.port}")
+    private int port;
+
+    private final static String UUID_ = UUID.randomUUID().toString();
+    @GetMapping("test")
+    public void test() throws UnknownHostException {
+        log.info(UUID_ +"---"+port);
+    }
+
+  public static void main(String[] args) {
+    //
+      HashMap<Object, Object> data = Maps.newHashMap();
+      data.put("a",1);
+      data.put("b",2);
+  }
 }
