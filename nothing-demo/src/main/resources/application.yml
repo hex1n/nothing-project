@@ -19,8 +19,8 @@ mybatis:
     map-underscore-to-camel-case: true
   mapper-locations: classpath*:mapper/**/*Mapper.xml
 
-log:
-  dir: D:\temp\log
+#log:
+#  dir: D:\temp\log
 management:
   endpoint:
     health:
@@ -30,4 +30,8 @@ management:
 redis-stream:
   names: test1,test2
   groups: grouptest1
+
+canal:
+  destination: hexin
+  server: localhost:1111
 
