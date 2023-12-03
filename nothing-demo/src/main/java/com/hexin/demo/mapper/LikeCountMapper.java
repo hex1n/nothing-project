@@ -2,19 +2,23 @@ package com.hexin.demo.mapper;
 
 import com.hexin.demo.entity.LikeCount;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-
+/**
+*  @author hex1n
+*/
 @Mapper
 public interface LikeCountMapper {
 
-    Integer getLikeCount(@Param("likeCount") LikeCount likeCount);
+    int insertLikeCount(LikeCount likeCount);
 
-   LikeCount selectByParamForUpdate(LikeCount likeCountParam);
+    int updateLikeCount(LikeCount likeCount);
 
-    List<LikeCount> getLikeCounts(@Param("likeCount") LikeCount likeCount);
+    int update(LikeCount likeCount);
 
-//    List<LikeCount> getByLikedTypeIds(@Param("likeCount") LikeCountDTO likeCount);
+    List<LikeCount> queryLikeCount(LikeCount likeCount);
+
+    LikeCount queryLikeCountLimit1(LikeCount likeCount);
+
 }

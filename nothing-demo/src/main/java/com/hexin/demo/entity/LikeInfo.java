@@ -1,43 +1,97 @@
 package com.hexin.demo.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
- * 点赞表 实体类
- *
- * @author
- * @date 2021-04-28
+ * @author hex1n
  */
 @Data
-public class LikeInfo  implements Serializable {
+@Builder
+@Accessors
+@AllArgsConstructor
+@NoArgsConstructor
+public class LikeInfo implements Serializable {
 
-    private static final long serialVersionUID = 292623669848346654L;
-    private String id;
-    //被点赞的用户id
-    private String likedMemberId;
-    //点赞的用户id
-//    @NotBlank(message = "点赞用户id不能为空", groups = {LikeValid.class})
-    private String likedPostId;
-    //点赞类型id
-    private String likedTypeId;
-    //点赞类型 1 名片 2 标签
+    private static final long serialVersionUID = 1701599230559L;
+
+
+    /**
+     * 主键
+     * id
+     * isNullAble:0
+     */
+    private Long id;
+
+    /**
+     * 点赞的用户id
+     * isNullAble:0
+     */
+    private Long likeUserId;
+
+    /**
+     * 被点赞的用户id
+     * isNullAble:0
+     */
+    private Long likedUserId;
+
+    /**
+     * 点赞类型id
+     * isNullAble:0
+     */
+    private Long likedSubjectId;
+
+    /**
+     * 点赞类型
+     * isNullAble:0
+     */
     private String likedType;
-    //点赞状态，0取消，1点赞
-    private Integer likedStatus;
-    //操作时间
+
+    /**
+     * 点赞状态 -1取消，1点赞
+     * isNullAble:1
+     */
+    private String likedStatus;
+
+    /**
+     * 操作时间
+     * isNullAble:0,defaultVal:-1
+     */
     private String operationTime;
-    //删除0 正常 1 删除
+
+    /**
+     * 删除0 正常 1 删除
+     * isNullAble:0,defaultVal:0
+     */
     private String delFlag;
 
-    // 点赞总数
-    private long likeCount;
-
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
+    /**
+     * 创建人
+     * isNullAble:0
+     */
     private String createBy;
+
+    /**
+     * 创建时间
+     * isNullAble:0
+     */
+    private java.time.LocalDateTime createTime;
+
+    /**
+     * 更新人
+     * isNullAble:0
+     */
     private String updateBy;
+
+    /**
+     * 更新时间
+     * isNullAble:0,defaultVal:CURRENT_TIMESTAMP
+     */
+    private java.time.LocalDateTime updateTime;
 
 }

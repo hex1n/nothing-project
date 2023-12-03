@@ -17,10 +17,9 @@ server:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  mapper-locations: classpath*:mappers/**/*Mapper.xml
+  type-aliases-package: com.hexin.demo.entity
 
-#log:
-#  dir: D:\temp\log
 management:
   endpoint:
     health:
@@ -34,4 +33,8 @@ redis-stream:
 canal:
   destination: hexin
   server: localhost:1111
+
+logging:
+  level:
+    root: info
 

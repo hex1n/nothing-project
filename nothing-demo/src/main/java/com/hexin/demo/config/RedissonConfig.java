@@ -10,13 +10,14 @@ import org.redisson.config.Config;
 import org.redisson.config.RedissonNodeConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
 /**
  * com.hfax.ldp.core.config.RedissonConfig <p> Created by nerd on 2017-07-23 15:24.
  */
-//@Configuration
+@Configuration
 public class RedissonConfig {
 
     @Value("${spring.redis.host}")
@@ -27,7 +28,7 @@ public class RedissonConfig {
 
     @Value("${spring.redis.database}")
     private Integer database;
-    @Value("${spring.redis.password}")
+    @Value("${spring.redis.password:}")
     private String password;
 
     @Bean

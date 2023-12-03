@@ -1,34 +1,86 @@
 package com.hexin.demo.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-
 /**
- * 点赞统计表 实体类
- *
- * @author
- * @date 2021-04-28
- */
+*
+*  @author hex1n
+*/
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
 @Builder
+@Accessors
 @AllArgsConstructor
 @NoArgsConstructor
 public class LikeCount implements Serializable {
 
-    private String id;
-    //被点赞的用户id
-    private String likedMemberId;
-    //点赞类型id
-    private String likedTypeId;
-    //点赞类型 1 名片 2 标签
+    private static final long serialVersionUID = 1701599644886L;
+
+
+    /**
+    * 主键
+    * id
+    * isNullAble:0
+    */
+    private Long id;
+
+    /**
+    * 被点赞的用户id
+    * isNullAble:0
+    */
+    private Long likedUserId;
+
+    /**
+    * 点赞类型id
+    * isNullAble:0
+    */
+    private Long likedSubjectId;
+
+    /**
+    * 点赞类型
+    * isNullAble:0
+    */
     private String likedType;
-    //点赞总数
-    private Integer likeTotal;
-    //删除0 正常 1 删除
+
+    /**
+    * 点赞总数
+    * isNullAble:1,defaultVal:0
+    */
+    private Long likeTotal;
+
+    /**
+    * 删除0 正常 1 删除
+    * isNullAble:0,defaultVal:0
+    */
     private String delFlag;
+
+    /**
+    * 创建人
+    * isNullAble:0
+    */
+    private String createBy;
+
+    /**
+    * 创建时间
+    * isNullAble:0
+    */
+    private java.time.LocalDateTime createTime;
+
+    /**
+    * 更新人
+    * isNullAble:0
+    */
+    private String updateBy;
+
+    /**
+    * 更新时间
+    * isNullAble:0,defaultVal:CURRENT_TIMESTAMP
+    */
+    private java.time.LocalDateTime updateTime;
+
 
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @Slf4j
@@ -53,6 +54,14 @@ public class HelloController {
             commentAsyncA.execute(() -> {
 
             });
+        }
+    }
+
+    public static void main(String[] args) {
+        AtomicInteger count = new AtomicInteger();
+        while (count.get() < 5) {
+            count.incrementAndGet();
+            log.info("============={}",count.get());
         }
     }
 

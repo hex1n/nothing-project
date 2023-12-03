@@ -2,18 +2,22 @@ package com.hexin.demo.mapper;
 
 import com.hexin.demo.entity.LikeInfo;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
-
+import java.util.List;
+/**
+*  @author author
+*/
 @Mapper
 public interface LikeInfoMapper {
 
-    LikeInfo getLastOperation(@Param("likedMemberId") String likedMemberId, @Param("likedPostId") String likedPostId,
-                              @Param("likedType") String likedType, @Param("likedTypeId") String likedTypeId);
+    int insertLikeInfo(LikeInfo likeInfo);
 
-//    List<LikeInfoVo> getLikeDetails(@Param("likedType") String likedType, @Param("likedTypeId") String likedTypeId);
+    int updateLikeInfo(LikeInfo likeInfo);
 
-//    List<LikeInfoVo> getLikeLabelDetails(@Param("likedMemberId") String likedMemberId, @Param("likedType") String likedType);
+    int update(LikeInfo likeInfo);
 
-//    List<LikeInfo> getIsLike2sbSth(@Param("like") LikeCountDTO likeCount);
+    List<LikeInfo> queryLikeInfo(LikeInfo likeInfo);
+
+    LikeInfo queryLikeInfoLimit(LikeInfo likeInfo);
+
 }
