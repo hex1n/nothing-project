@@ -1,9 +1,6 @@
 package com.hexin.demo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -16,6 +13,7 @@ import java.io.Serializable;
 @Accessors
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class LikeInfo implements Serializable {
 
     private static final long serialVersionUID = 1701599230559L;

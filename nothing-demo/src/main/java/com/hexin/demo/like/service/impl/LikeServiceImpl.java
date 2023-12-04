@@ -3,6 +3,7 @@ package com.hexin.demo.like.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.hexin.demo.ResultBean;
 import com.hexin.demo.common.BusinessTransactionTemplate;
+import com.hexin.demo.common.TransactionPropagationEnum;
 import com.hexin.demo.entity.LikeCount;
 import com.hexin.demo.entity.LikeInfo;
 import com.hexin.demo.entity.LikeInfoVO;
@@ -13,7 +14,6 @@ import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -48,6 +48,7 @@ public class LikeServiceImpl implements LikeService {
         LikeInfoVO likeInfoVO = new LikeInfoVO();
         long likeTotalCount = getLikeCount(likeRedisKey);
         System.out.println("total count:" + likeTotalCount);
+
         businessTransactionTemplate.executeTransaction(() -> {
             likeInfo.setCreateBy("admin");
             likeInfo.setUpdateBy("admin");
@@ -82,7 +83,7 @@ public class LikeServiceImpl implements LikeService {
             BeanUtils.copyProperties(likeInfo, likeInfoVO);
             likeInfoVO.setTotalLikes(likeTotalCount);
 
-        }, Propagation.REQUIRED);
+        }, TransactionPropagationEnum.DEFAULT);
         return ResultBean.success(likeInfoVO);
     }
 

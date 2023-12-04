@@ -6,7 +6,7 @@ package com.hexin.demo.common;
  * @Description
  **/
 @FunctionalInterface
-public interface TransactionCallbackWithoutResult {
+public interface BizTemplateCallback {
 
-    void executeTransactionWithoutResult();
+    void process();
 }

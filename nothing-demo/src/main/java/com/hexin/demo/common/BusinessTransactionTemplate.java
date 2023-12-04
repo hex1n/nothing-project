@@ -1,14 +1,14 @@
 package com.hexin.demo.common;
 
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @Author hex1n
@@ -20,17 +20,23 @@ import javax.annotation.Resource;
 public class BusinessTransactionTemplate {
 
     @Resource
-    private TransactionTemplate transactionTemplate;
+    private Map<String, TransactionTemplate> transactionTemplateMap = Maps.newConcurrentMap();
 
-    public void executeTransaction(TransactionCallbackWithoutResult callbackWithoutResult, Propagation propagationBehavior) {
-        transactionTemplate.setPropagationBehavior(propagationBehavior.value());
+    public void executeTransaction(BizTemplateCallback callbackWithoutResult, TransactionPropagationEnum transactionPropagationEnum) {
+
+        TransactionTemplate transactionTemplate = transactionTemplateMap.get(transactionPropagationEnum.getCode());
+        if (transactionTemplate == null) {
+            log.error("未匹配到事务模版");
+            return;
+        }
+
         transactionTemplate.execute(new TransactionCallback<Void>() {
             @Override
             public Void doInTransaction(TransactionStatus transactionStatus) {
                 try {
-                    callbackWithoutResult.executeTransactionWithoutResult();
+                    callbackWithoutResult.process();
                 } catch (Exception e) {
-                    log.error("事务处理失败",e);
+                    log.error("事务处理失败", e);
                     transactionStatus.setRollbackOnly();
                 }
                 return null;
@@ -39,21 +45,27 @@ public class BusinessTransactionTemplate {
 
     }
 
-    public T executeTransactionWithResult(TransactionCallbackWithResult<T> callbackWithResult, Propagation propagationBehavior) {
-        transactionTemplate.setPropagationBehavior(propagationBehavior.value());
-        transactionTemplate.execute(new TransactionCallback<T>() {
+    public <T> T executeTransactionWithResult(BizTemplateCallbackWithResult<T> bizTemplateCallback, TransactionPropagationEnum transactionPropagationEnum) {
+        TransactionTemplate transactionTemplate = transactionTemplateMap.get(transactionPropagationEnum.getCode());
+        if (transactionTemplate == null) {
+            log.error("未匹配到事务模版");
+            return null;
+        }
+
+        return transactionTemplate.execute(new TransactionCallback<T>() {
+            T processResult;
+
             @Override
             public T doInTransaction(TransactionStatus transactionStatus) {
                 try {
-                    T result = callbackWithResult.executeTransactionWithResult();
-                    return result;
+                    processResult = bizTemplateCallback.doProcessWithResult();
                 } catch (Exception e) {
+                    log.error("事务处理失败", e);
                     transactionStatus.setRollbackOnly();
                 }
-                return null;
+                return processResult;
             }
         });
-        return null;
     }
 
 }
