@@ -50,12 +50,6 @@ public class LikeInfo implements Serializable {
     private String likedType;
 
     /**
-     * 点赞状态 -1取消，1点赞
-     * isNullAble:1
-     */
-    private String likedStatus;
-
-    /**
      * 操作时间
      * isNullAble:0,defaultVal:-1
      */

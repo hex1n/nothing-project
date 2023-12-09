@@ -17,4 +17,9 @@ import java.io.Serializable;
 public class LikeInfoVO extends LikeInfo implements Serializable {
 
     private Long totalLikes;
+    /**
+     * 点赞状态 -1取消，1点赞
+     * isNullAble:1
+     */
+    private String likedStatus;
 }

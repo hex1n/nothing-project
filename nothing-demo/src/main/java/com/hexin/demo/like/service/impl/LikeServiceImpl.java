@@ -33,9 +33,7 @@ public class LikeServiceImpl implements LikeService {
     public WebResponse<LikeInfoVO> likeUnLike(String likeRedisKey, LikeInfo likeInfo) {
 
         LikeInfoVO likeInfoVO = BizConvertsMapper.INSTANCE.likeToLikeVO(likeInfo);
-
         RSet<Object> likesRedis = redissonClient.getSet(likeRedisKey);
-
         if (likesRedis.add(likeInfo.getLikeUserId())) {
             likeInfoVO.setLikedStatus("1");
         } else {
@@ -44,10 +42,7 @@ public class LikeServiceImpl implements LikeService {
         }
         long likeTotalCount = getRedisLikeCount(likeRedisKey);
         log.info("total count:" + likeTotalCount);
-
-
         likeInfoVO.setTotalLikes(likeTotalCount);
-        log.info(this.getClass().getSimpleName() + "--" + Thread.currentThread().getName());
         bizEventPublisher.publishEvent(likeInfoVO);
         return WebResponse.success(likeInfoVO);
     }

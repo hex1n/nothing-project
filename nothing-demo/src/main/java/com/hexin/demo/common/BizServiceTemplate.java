@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.stereotype.Component;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,8 @@ import java.util.Map;
 public class BizServiceTemplate<R, P> {
 
     public R process(P param, String methodName, ServiceExecutor<R, P> serviceExecutor) {
-        log.info("[BizServiceTemplate] ---> methodName:{}, param:{},", methodName, param);
+        String requestMessage = MessageFormat.format("[{0}]--->methodName:[{1}]#requestParam:{2}", this.getClass().getSimpleName(), methodName, param);
+        log.info(requestMessage);
         HashMap<@Nullable Object, @Nullable Object> context = Maps.newHashMap();
         serviceExecutor.paramCheck(param, context);
         try {
