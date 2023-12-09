@@ -40,7 +40,7 @@ public class HelloController {
 
 
     @Autowired
-    Executor commentAsyncA;
+    Executor commentAsync;
 
     public void test() {
         List<Integer> list = new ArrayList<>();
@@ -51,7 +51,7 @@ public class HelloController {
         List<List<Integer>> subLists = Lists.partition(list, 1000);
         CountDownLatch latch = new CountDownLatch(subLists.size());
         for (List<Integer> subList : subLists) {
-            commentAsyncA.execute(() -> {
+            commentAsync.execute(() -> {
 
             });
         }

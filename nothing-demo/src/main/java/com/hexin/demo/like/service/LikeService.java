@@ -1,7 +1,8 @@
 package com.hexin.demo.like.service;
 
-import com.hexin.demo.ResultBean;
+import com.hexin.demo.WebResponse;
 import com.hexin.demo.entity.LikeInfo;
+import com.hexin.demo.entity.LikeInfoVO;
 
 /**
  * @Author hex1n
@@ -9,5 +10,5 @@ import com.hexin.demo.entity.LikeInfo;
  * @Description
  **/
 public interface LikeService {
-    ResultBean likeUnLike(String likeRedisKey, LikeInfo likeInfo);
+    WebResponse<LikeInfoVO> likeUnLike(String likeRedisKey, LikeInfo likeInfo);
 }

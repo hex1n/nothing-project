@@ -5,8 +5,8 @@ package com.hexin.demo.common;
  * @Date 2023/12/3/21:19
  * @Description
  **/
-public interface BizTemplateCallbackWithResult<T> {
+public abstract class BizTemplateCallbackWithResult<T> {
 
-    T doProcessWithResult();
+   protected abstract T processWithResult();
 
 }

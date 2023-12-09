@@ -18,10 +18,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync
 @Configuration
 @Slf4j
-public class ExecutorConfig{
+public class ExecutorConfig {
     private int corePoolSize = 10;
     private int maxPoolSize = 20;
-    private int queueCapacity = 50000;
+    private int queueCapacity = 5000;
 
     @Bean(name = "commentAsync")
     public Executor commentAsync() {
@@ -35,13 +35,13 @@ public class ExecutorConfig{
         return executor;
     }
 
-    @Bean(name = "commentAsyncA")
-    public Executor commentAsyncA() {
+    @Bean(name = "eventExecutor")
+    public Executor eventExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
-        executor.setThreadNamePrefix("commentAsync-");
+        executor.setThreadNamePrefix("eventExecutor-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;

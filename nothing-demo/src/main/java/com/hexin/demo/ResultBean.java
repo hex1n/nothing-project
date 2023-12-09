@@ -15,6 +15,7 @@ public class ResultBean implements Serializable {
     private int code;
     private String message;
     private Object data;
+
     public ResultBean() {
     }
 
@@ -69,31 +70,4 @@ public class ResultBean implements Serializable {
         return new ResultBean(code, message);
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        Thread t1 = new Thread(() -> {
-            try {
-                Thread.sleep(10 * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }, "t1");
-        t1.start();
-
-        String name = Thread.currentThread().getState().name();
-        System.out.println(name);
-        // 打断正在睡眠的线程,其它线程可以使用 interrupt 方法打断正在睡眠的线程，这时 sleep 方法会抛出 InterruptedException
-        t1.interrupt();
-       /* Thread t2 = new Thread(() -> {
-            int n = 0;
-            while (true) {
-                n++;
-                // 调用 yield 会让当前线程从 Running 进入 Runnable 就绪状态，然后调度执行其它线程
-                // 通过有无让出代码观察n的变化快慢
-                Thread.currentThread().yield();
-            }
-        }, "t2");
-        Thread.sleep(1);
-        t2.start();
-        System.out.println(Thread.currentThread().getState().name());*/
-    }
-    }
+}

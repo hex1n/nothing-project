@@ -21,4 +21,5 @@ public interface LikeCountMapper {
 
     LikeCount queryLikeCountLimit1(LikeCount likeCount);
 
+
 }

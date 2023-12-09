@@ -5,8 +5,7 @@ package com.hexin.demo.common;
  * @Date 2023/12/3/21:42
  * @Description
  **/
-@FunctionalInterface
-public interface BizTemplateCallback {
+public abstract class BizTemplateCallback {
 
-    void process();
+    protected abstract void process();
 }

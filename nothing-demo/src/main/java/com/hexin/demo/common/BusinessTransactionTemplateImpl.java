@@ -17,7 +17,7 @@ import java.util.Map;
  **/
 @Component
 @Slf4j
-public class BusinessTransactionTemplateImpl {
+public class BusinessTransactionTemplateImpl implements BusinessTransactionTemplate {
 
     @Resource
     private Map<String, TransactionTemplate> transactionTemplateMap = Maps.newConcurrentMap();
@@ -26,20 +26,15 @@ public class BusinessTransactionTemplateImpl {
 
         TransactionTemplate transactionTemplate = transactionTemplateMap.get(transactionPropagationEnum.getCode());
         if (transactionTemplate == null) {
-            log.error("未匹配到事务模版");
+            log.error("未匹配到对应事务模版");
             return;
         }
-
-        transactionTemplate.execute(new TransactionCallback<Void>() {
-            @Override
-            public Void doInTransaction(TransactionStatus transactionStatus) {
-                try {
-                    callbackWithoutResult.process();
-                } catch (Exception e) {
-                    log.error("事务处理失败", e);
-                    transactionStatus.setRollbackOnly();
-                }
-                return null;
+        transactionTemplate.executeWithoutResult((transactionStatus) -> {
+            try {
+                callbackWithoutResult.process();
+            } catch (Exception e) {
+                log.error("事务处理失败", e);
+                transactionStatus.setRollbackOnly();
             }
         });
 
@@ -58,7 +53,7 @@ public class BusinessTransactionTemplateImpl {
             @Override
             public T doInTransaction(TransactionStatus transactionStatus) {
                 try {
-                    processResult = bizTemplateCallback.doProcessWithResult();
+                    processResult = bizTemplateCallback.processWithResult();
                 } catch (Exception e) {
                     log.error("事务处理失败", e);
                     transactionStatus.setRollbackOnly();

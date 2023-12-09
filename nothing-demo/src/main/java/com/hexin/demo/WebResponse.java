@@ -1,4 +1,4 @@
-package com.hexin.demo.common;
+package com.hexin.demo;
 
 import com.hexin.demo.constant.ErrorCode;
 import lombok.AllArgsConstructor;

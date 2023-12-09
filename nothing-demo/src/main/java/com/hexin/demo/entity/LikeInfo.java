@@ -9,7 +9,6 @@ import java.io.Serializable;
  * @author hex1n
  */
 @Data
-@Builder
 @Accessors
 @AllArgsConstructor
 @NoArgsConstructor

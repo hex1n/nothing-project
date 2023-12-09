@@ -20,4 +20,5 @@ public interface LikeInfoMapper {
 
     LikeInfo queryLikeInfoLimit(LikeInfo likeInfo);
 
+    int deleteLikeInfo(LikeInfo likeInfo);
 }
