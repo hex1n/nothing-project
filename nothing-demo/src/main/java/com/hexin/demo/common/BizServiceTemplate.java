@@ -1,13 +1,15 @@
 package com.hexin.demo.common;
 
 import com.google.common.collect.Maps;
+import com.hexin.demo.WebResponse;
+import com.hexin.demo.constant.ErrorCode;
+import com.hexin.demo.exception.BizException;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @Author hex1n
@@ -16,21 +18,28 @@ import java.util.Map;
  **/
 @Component
 @Slf4j
-public class BizServiceTemplate<R, P> {
+public class BizServiceTemplate<P, R> {
 
-    public R process(P param, String methodName, ServiceExecutor<R, P> serviceExecutor) {
+    public WebResponse<R> process(P param, String methodName, ServiceExecutor<P, R> serviceExecutor) {
         String requestMessage = MessageFormat.format("[{0}]--->methodName:[{1}]#requestParam:{2}", this.getClass().getSimpleName(), methodName, param);
         log.info(requestMessage);
-        HashMap<@Nullable Object, @Nullable Object> context = Maps.newHashMap();
-        serviceExecutor.paramCheck(param, context);
+        ConcurrentMap<Object, Object> context = Maps.newConcurrentMap();
         try {
-            return serviceExecutor.process(param, context);
+            serviceExecutor.paramCheck(param, context);
+            R result = serviceExecutor.process(param, context);
+            return WebResponse.success(result);
+        } catch (BizException bizException) {
+            String msg = MessageFormat.format("业务异常 [{0}]--->methodName:[{1}]", this.getClass().getSimpleName(), methodName);
+            log.error(msg, bizException);
+            return WebResponse.error(bizException.getErrorCode(), bizException.getMessage());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            String msg = MessageFormat.format("系统异常[{0}]--->methodName:[{1}]", this.getClass().getSimpleName(), methodName);
+            log.error(msg, e);
+            return WebResponse.error(ErrorCode.INTERNAL_SERVER_ERROR.getCode(), ErrorCode.INTERNAL_SERVER_ERROR.getDesc());
         }
     }
 
-    public interface ServiceExecutor<R, P> {
+    public interface ServiceExecutor<P, R> {
         void paramCheck(P param, Map<Object, Object> context);
 
         R process(P param, Map<Object, Object> context);

@@ -1,6 +1,5 @@
 package com.hexin.demo.like.service.impl;
 
-import com.hexin.demo.WebResponse;
 import com.hexin.demo.converts.BizConvertsMapper;
 import com.hexin.demo.entity.LikeInfo;
 import com.hexin.demo.entity.LikeInfoVO;
@@ -30,7 +29,7 @@ public class LikeServiceImpl implements LikeService {
     private BizEventPublisher bizEventPublisher;
 
     @Override
-    public WebResponse<LikeInfoVO> likeUnLike(String likeRedisKey, LikeInfo likeInfo) {
+    public LikeInfoVO likeUnLike(String likeRedisKey, LikeInfo likeInfo) {
 
         LikeInfoVO likeInfoVO = BizConvertsMapper.INSTANCE.likeToLikeVO(likeInfo);
         RSet<Object> likesRedis = redissonClient.getSet(likeRedisKey);
@@ -44,7 +43,7 @@ public class LikeServiceImpl implements LikeService {
         log.info("total count:" + likeTotalCount);
         likeInfoVO.setTotalLikes(likeTotalCount);
         bizEventPublisher.publishEvent(likeInfoVO);
-        return WebResponse.success(likeInfoVO);
+        return likeInfoVO;
     }
 
 

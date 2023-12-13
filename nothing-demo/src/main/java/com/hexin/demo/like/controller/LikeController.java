@@ -1,10 +1,10 @@
 package com.hexin.demo.like.controller;
 
-import com.hexin.demo.ResultBean;
 import com.hexin.demo.WebResponse;
 import com.hexin.demo.common.BizServiceTemplate;
 import com.hexin.demo.entity.LikeInfo;
 import com.hexin.demo.entity.LikeInfoVO;
+import com.hexin.demo.exception.BizException;
 import com.hexin.demo.like.service.LikeService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -31,14 +31,14 @@ public class LikeController {
 
     @PostMapping("/likeUnLike")
     public WebResponse<LikeInfoVO> likeUnLike(@RequestBody LikeInfo likeInfo) {
-        return (WebResponse<LikeInfoVO>) bizServiceTemplate.process(likeInfo, "likeUnLike", new BizServiceTemplate.ServiceExecutor<WebResponse<LikeInfoVO>, LikeInfo>() {
+        return bizServiceTemplate.process(likeInfo, "likeUnLike", new BizServiceTemplate.ServiceExecutor<LikeInfo, LikeInfoVO>() {
             @Override
             public void paramCheck(LikeInfo param, Map context) {
                 checkLikesParam(param);
             }
 
             @Override
-            public WebResponse<LikeInfoVO> process(LikeInfo param, Map context) {
+            public LikeInfoVO process(LikeInfo param, Map context) {
                 String likeRedisKey = generateRedisKey(likeInfo.getLikedType(), likeInfo.getLikedSubjectId(), likeInfo.getLikedUserId());
                 return likeService.likeUnLike(likeRedisKey, likeInfo);
             }
@@ -46,12 +46,11 @@ public class LikeController {
     }
 
     @GetMapping("/queryLikesInfos")
-    public ResultBean queryLikesInfos(@RequestBody LikeInfo likeInfo) {
+    public WebResponse queryLikesInfos(@RequestBody LikeInfo likeInfo) {
 
         checkLikesParam(likeInfo);
         String likeRedisKey = generateRedisKey(likeInfo.getLikedType(), likeInfo.getLikedSubjectId(), likeInfo.getLikedUserId());
-        //return likeService.likeUnLike(likeRedisKey, likeInfo);
-        return null;
+        return WebResponse.success();
     }
 
     private String generateRedisKey(String likedType, Long likedSubjectId, Long likedUserId) {
@@ -65,11 +64,11 @@ public class LikeController {
 
     private void checkLikesParam(LikeInfo likeInfo) {
         String likedType = likeInfo.getLikedType();
-        String likeUserId = String.valueOf(likeInfo.getLikeUserId());
-        String likedUserId = String.valueOf(likeInfo.getLikedUserId());
-        String likedSubjectId = String.valueOf(likeInfo.getLikedSubjectId());
-        if (StringUtils.isAnyBlank(likedType, likeUserId, likedUserId, likedSubjectId)) {
-            throw new IllegalArgumentException("参数校验失败");
+        Long likeUserId = likeInfo.getLikeUserId();
+        Long likedUserId = likeInfo.getLikedUserId();
+        Long likedSubjectId = likeInfo.getLikedSubjectId();
+        if (StringUtils.isBlank(likedType) || likeUserId == null || likedUserId == null || likedSubjectId == null) {
+            throw new BizException("点赞参数校验失败");
         }
     }
 }

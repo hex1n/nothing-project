@@ -18,23 +18,20 @@ public class WebResponse<T> {
     private T data;
 
     public static <T> WebResponse<Void> success() {
-        return new WebResponse<Void>(ErrorCode.SUCCESS.getCode(), ErrorCode.SUCCESS.getMessage(), Boolean.TRUE, null);
+        return new WebResponse<Void>(ErrorCode.SUCCESS.getCode(), ErrorCode.SUCCESS.getDesc(), Boolean.TRUE, null);
     }
 
     public static <T> WebResponse<T> success(T data) {
-        return new WebResponse<>(ErrorCode.SUCCESS.getCode(), ErrorCode.SUCCESS.getMessage(), Boolean.TRUE, data);
+        return new WebResponse<>(ErrorCode.SUCCESS.getCode(), ErrorCode.SUCCESS.getDesc(), Boolean.TRUE, data);
     }
 
-    public static <T> WebResponse<T> error(ErrorCode errorCode) {
-        return new WebResponse(errorCode.getCode(), errorCode.getMessage(), Boolean.FALSE, null);
+
+    public static <T> WebResponse<T> error(int errorCode, String message) {
+        return new WebResponse(errorCode, message, Boolean.FALSE, null);
     }
 
-    public static <T> WebResponse<T> error(ErrorCode errorCode, String message) {
-        return new WebResponse(errorCode.getCode(), message, Boolean.FALSE, null);
-    }
-
-    public static <T> WebResponse<T> error(ErrorCode errorCode, T data) {
-        return new WebResponse<>(errorCode.getCode(), errorCode.getMessage(), Boolean.FALSE, data);
+    public static <T> WebResponse<T> error(int errorCode, String message, T data) {
+        return new WebResponse<>(errorCode, message, Boolean.FALSE, data);
     }
 
     public int getStatusCode() {

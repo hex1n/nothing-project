@@ -5,15 +5,19 @@ spring:
     database: 1
     host: localhost
     port: 6379
-#    password: SIJ*sh9832
-#    host: r-2zebd8k5j3p83xbw6w.redis.rds.aliyuncs.com
+  #    password: SIJ*sh9832
+  #    host: r-2zebd8k5j3p83xbw6w.redis.rds.aliyuncs.com
   datasource:
     username: root
     password: mysql123
     url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     hikari.driver-class-name: com.mysql.cj.jdbc.Driver
+  main:
+    lazy-initialization: false
 server:
   port: 8001
+  shutdown: graceful # 优雅停机
+
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

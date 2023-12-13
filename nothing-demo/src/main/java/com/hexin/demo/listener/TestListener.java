@@ -16,7 +16,7 @@ public class TestListener {
 
     @EventListener(classes = ApplicationReadyEvent.class)
     public void test() {
-        log.info("ApplicationReadyEvent=========================");
+        log.info(this.getClass().getSimpleName() + "---> ApplicationReadyEvent");
     }
 
 
