@@ -18,9 +18,9 @@ import java.util.concurrent.ConcurrentMap;
  **/
 @Component
 @Slf4j
-public class BizServiceTemplate<P, R> {
+public class BizServiceTemplate {
 
-    public WebResponse<R> process(P param, String methodName, ServiceExecutor<P, R> serviceExecutor) {
+    public <P, R> WebResponse<R> process(P param, String methodName, ServiceExecutor<P, R> serviceExecutor) {
         String requestMessage = MessageFormat.format("[{0}]--->methodName:[{1}]#requestParam:{2}", this.getClass().getSimpleName(), methodName, param);
         log.info(requestMessage);
         ConcurrentMap<Object, Object> context = Maps.newConcurrentMap();
