@@ -1,8 +1,6 @@
 package com.hexin.demo.test;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +68,7 @@ public class BigFileTest {
     }
 
     private static List<File> splitLargeFile(String largeFileName) throws IOException {
-        LineIterator fileContents = FileUtils.lineIterator(new File(largeFileName), StandardCharsets.UTF_8.name());
+        /*LineIterator fileContents = FileUtils.lineIterator(new File(largeFileName), StandardCharsets.UTF_8.name());
         List<String> lines = Lists.newArrayList();
         // 文件序号
         int num = 1;
@@ -88,7 +86,8 @@ public class BigFileTest {
         if (!lines.isEmpty()) {
             // 继续执行
             createSmallFile(lines, num, files);
-        }
+        }*/
+        List<File> files = Lists.newArrayList();
         return files;
     }
 

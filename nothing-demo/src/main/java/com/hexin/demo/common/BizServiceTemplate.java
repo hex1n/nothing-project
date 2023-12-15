@@ -1,7 +1,7 @@
 package com.hexin.demo.common;
 
 import com.google.common.collect.Maps;
-import com.hexin.demo.WebResponse;
+import com.hexin.demo.entity.WebResponse;
 import com.hexin.demo.constant.ErrorCode;
 import com.hexin.demo.exception.BizException;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +27,15 @@ public class BizServiceTemplate {
         try {
             serviceExecutor.paramCheck(param, context);
             R result = serviceExecutor.process(param, context);
-            return WebResponse.success(result);
+            return WebResponse.buildSuccessWithData(result);
         } catch (BizException bizException) {
             String msg = MessageFormat.format("业务异常 [{0}]--->methodName:[{1}]", this.getClass().getSimpleName(), methodName);
             log.error(msg, bizException);
-            return WebResponse.error(bizException.getErrorCode(), bizException.getMessage());
+            return WebResponse.buildFailResult(bizException.getErrorCode(), bizException.getMessage());
         } catch (Exception e) {
             String msg = MessageFormat.format("系统异常[{0}]--->methodName:[{1}]", this.getClass().getSimpleName(), methodName);
             log.error(msg, e);
-            return WebResponse.error(ErrorCode.INTERNAL_SERVER_ERROR.getCode(), ErrorCode.INTERNAL_SERVER_ERROR.getDesc());
+            return WebResponse.buildFailResult(ErrorCode.INTERNAL_SERVER_ERROR.getCode(), ErrorCode.INTERNAL_SERVER_ERROR.getDesc());
         }
     }
 

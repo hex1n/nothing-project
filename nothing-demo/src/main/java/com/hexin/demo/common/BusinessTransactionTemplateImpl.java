@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -25,15 +26,15 @@ public class BusinessTransactionTemplateImpl implements BusinessTransactionTempl
     public void executeTransaction(BizTemplateCallback callbackWithoutResult, TransactionPropagationEnum transactionPropagationEnum) {
 
         TransactionTemplate transactionTemplate = transactionTemplateMap.get(transactionPropagationEnum.getCode());
-        if (transactionTemplate == null) {
+        Assert.notNull(transactionTemplate, () -> {
             log.error("未匹配到对应事务模版");
-            return;
-        }
+            return "未匹配到对应事务模版";
+        });
         transactionTemplate.executeWithoutResult((transactionStatus) -> {
             try {
                 callbackWithoutResult.process();
             } catch (Exception e) {
-                log.error("事务处理失败", e);
+                log.error("[BusinessTransactionTemplate] 事务处理失败", e);
                 transactionStatus.setRollbackOnly();
             }
         });

@@ -1,6 +1,6 @@
 package com.hexin.demo.like.controller;
 
-import com.hexin.demo.WebResponse;
+import com.hexin.demo.entity.WebResponse;
 import com.hexin.demo.common.BizServiceTemplate;
 import com.hexin.demo.entity.LikeInfo;
 import com.hexin.demo.entity.LikeInfoVO;
@@ -50,7 +50,7 @@ public class LikeController {
 
         checkLikesParam(likeInfo);
         String likeRedisKey = generateRedisKey(likeInfo.getLikedType(), likeInfo.getLikedSubjectId(), likeInfo.getLikedUserId());
-        return WebResponse.success();
+        return WebResponse.buildSuccessWithoutData();
     }
 
     private String generateRedisKey(String likedType, Long likedSubjectId, Long likedUserId) {
