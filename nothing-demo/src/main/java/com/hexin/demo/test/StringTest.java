@@ -1,6 +1,6 @@
 package com.hexin.demo.test;
 
-import com.alibaba.fastjson.JSON;
+import com.hexin.demo.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.DateFormat;
@@ -29,7 +29,7 @@ public class StringTest {
         int week = calendar.get(Calendar.DAY_OF_WEEK);
         log.info("labelCreatePara========:{}",labelCreatePara);
         log.info("week========:{}",week);
-        log.info("lableCreateList:{}", JSON.toJSONString(labelCreateList));
+        log.info("lableCreateList:{}", GsonUtils.toJSONString(labelCreateList));
     }
 
 

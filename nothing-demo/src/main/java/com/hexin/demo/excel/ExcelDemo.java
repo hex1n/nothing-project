@@ -1,8 +1,8 @@
 package com.hexin.demo.excel;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.hexin.demo.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -119,14 +119,14 @@ public class ExcelDemo {
                 if (rowDataList.size() >= BATCH_COUNT) {
                     log.info("rowDataList size:{}",rowDataList.size());
                     for (Object o : rowDataList) {
-                        log.info("row data:{}", JSON.toJSONString(o));
+                        log.info("row data:{}", GsonUtils.toJSONString(o));
                     }
                     rowDataList.clear();
                 }
                 else if (count.get()==200000){
                     log.info("last row data size: {},count:{}",rowDataList.size(),count.get());
                     for (Object o : rowDataList) {
-                        log.info("last row data:{}", JSON.toJSONString(o));
+                        log.info("last row data:{}", GsonUtils.toJSONString(o));
                     }
                     rowDataList.clear();
                 }

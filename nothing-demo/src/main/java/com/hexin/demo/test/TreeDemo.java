@@ -1,6 +1,6 @@
 package com.hexin.demo.test;
 
-import com.alibaba.fastjson.JSON;
+import com.hexin.demo.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
@@ -278,6 +278,6 @@ public class TreeDemo {
                 "accessId: lyfb8a453d0c0e49\n" +
                 "accessKey: 9596f9b4f60e4194bc2b5accfe808e35\n";
                 String[] split = str.split("============");
-                log.info(JSON.toJSONString(split));
+                log.info(GsonUtils.toJSONString(split));
     }
 }

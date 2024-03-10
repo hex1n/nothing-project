@@ -1,7 +1,7 @@
 package com.hexin.demo.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.hexin.demo.util.GsonUtils;
 import org.redisson.connection.CRC16;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +36,6 @@ public class RequestLimitController {
       int positions = position % 3;
       allArr.get(positions).add(ele);
     }
-    System.out.println(JSON.toJSONString(allArr));
+    System.out.println(GsonUtils.toJSONString(allArr));
   }
 }

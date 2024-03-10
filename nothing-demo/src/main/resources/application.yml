@@ -14,6 +14,10 @@ spring:
     hikari.driver-class-name: com.mysql.cj.jdbc.Driver
   main:
     lazy-initialization: false
+
+
+  kafka:
+    bootstrap-servers: localhost:9092
 server:
   port: 8001
   shutdown: graceful # 优雅停机
@@ -41,4 +45,21 @@ canal:
 logging:
   level:
     root: info
+
+debezium:
+  database:
+    name: test
+    enabled: true
+    serverId: 1
+    host: 127.0.0.1
+    port: 3306
+    username: root
+    password: mysql123
+#    offset-path: debezium/dlwlrma/offset.dat
+#    history-path: debezium/dlwlrma/dbhistory.dat
+    table:
+      - test.t_post
+    column:
+#      - test.t_post.post_name
+
 

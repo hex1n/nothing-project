@@ -1,7 +1,7 @@
 package com.hexin.demo.test;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.hexin.demo.util.GsonUtils;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,7 +43,7 @@ public class ThreadPoolTest {
         int[] arr = new int[]{0, 1, 2, 2, 1, 1, 4, 3, 4, 5};
 //        Arrays.sort(arr);
         sort(arr);
-        log.info(JSON.toJSONString(arr));
+        log.info(GsonUtils.toJSONString(arr));
         for (int i1 = 0; i1 < arr.length; i1++) {
             if (i1 == arr.length - 1 && arr[i1 - 1] != arr[i1]) {
                 System.out.println(arr[i1]);

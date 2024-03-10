@@ -2,8 +2,8 @@ package com.hexin.demo.excel;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.hexin.demo.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class EasyExcelListener extends AnalysisEventListener {
     private void saveData() {
         // todo
         for (Object o : dataList) {
-            log.info("row data:{}", JSON.toJSONString(o));
+            log.info("row data:{}", GsonUtils.toJSONString(o));
         }
     }
 }
