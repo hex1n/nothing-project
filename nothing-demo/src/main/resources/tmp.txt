@@ -1,0 +1,136 @@
+import com.ql.util.express.DefaultContext;
+import com.ql.util.express.ExpressRunner;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+// 定义策略接口
+interface FeeCalculationStrategy {
+    double calculateFee(double amount, FundFeeRule rule);
+}
+
+// 具体策略：百分比费率
+class PercentageFeeStrategy implements FeeCalculationStrategy {
+    @Override
+    public double calculateFee(double amount, FundFeeRule rule) {
+        return amount * (rule.standardFeeAmount / 100);
+    }
+}
+
+// 具体策略：固定费用
+class FixedFeeStrategy implements FeeCalculationStrategy {
+    @Override
+    public double calculateFee(double amount, FundFeeRule rule) {
+        return rule.standardFeeAmount;
+    }
+}
+
+// 策略工厂
+class FeeCalculationStrategyFactory {
+    private static final Map<String, FeeCalculationStrategy> strategyMap = new HashMap<>();
+
+    static {
+        strategyMap.put("rate", new PercentageFeeStrategy());
+        strategyMap.put("fixed", new FixedFeeStrategy());
+    }
+
+    public static FeeCalculationStrategy getStrategy(String feeType) {
+        return strategyMap.get(feeType);
+    }
+}
+
+// 定义规则类
+class FundFeeRule {
+    String fundCode;
+    String transactionType;
+    String conditionExpression;
+    String feeType;
+    double standardFeeAmount;
+    Double discountFeeAmount; // 允许为空
+
+    public FundFeeRule(String fundCode, String transactionType, String conditionExpression, String feeType,
+                       double standardFeeAmount, Double discountFeeAmount) {
+        this.fundCode = fundCode;
+        this.transactionType = transactionType;
+        this.conditionExpression = conditionExpression;
+        this.feeType = feeType;
+        this.standardFeeAmount = standardFeeAmount;
+        this.discountFeeAmount = discountFeeAmount;
+    }
+}
+
+// 规则管理器
+class FundFeeRuleManager {
+    private final ExpressRunner runner = new ExpressRunner();
+    private final Map<String, List<FundFeeRule>> ruleCache = new HashMap<>();
+
+    public void loadRulesToCache() {
+        List<FundFeeRule> rules = loadRulesFromDatabase();
+        for (FundFeeRule rule : rules) {
+            ruleCache.computeIfAbsent(rule.fundCode + "-" + rule.transactionType, k -> new java.util.ArrayList<>()).add(rule);
+        }
+    }
+
+    public double calculateFeeForTransaction(String fundCode, String transactionType, double amount, int days) {
+        String key = fundCode + "-" + transactionType;
+        List<FundFeeRule> rules = ruleCache.get(key);
+
+        if (rules == null) {
+            System.out.println("未找到匹配的规则");
+            return 0;
+        }
+
+        DefaultContext<String, Object> context = new DefaultContext<>();
+        context.put("amount", amount);
+        context.put("days", days);
+
+        for (FundFeeRule rule : rules) {
+            try {
+                Boolean result = (Boolean) runner.execute(rule.conditionExpression, context, null, true, false);
+                if (Boolean.TRUE.equals(result)) {
+                    System.out.println("匹配规则: " + rule.conditionExpression);
+                    FeeCalculationStrategy strategy = FeeCalculationStrategyFactory.getStrategy(rule.feeType);
+                    double fee = strategy.calculateFee(amount, rule);
+                    System.out.println("计算的费用: " + fee);
+                    return fee;
+                }
+            } catch (Exception e) {
+                System.err.println("解析表达式出错: " + e.getMessage());
+            }
+        }
+        return 0;
+    }
+
+    private List<FundFeeRule> loadRulesFromDatabase() {
+        // 模拟从数据库中加载规则
+        return List.of(
+            new FundFeeRule("10086", "buy", "amount >= 0 && amount < 1000000", "rate", 1.20, 0.12),
+            new FundFeeRule("10086", "buy", "amount >= 1000000 && amount < 2000000", "rate", 0.80, 0.08),
+            new FundFeeRule("10086", "buy", "amount >= 2000000 && amount < 5000000", "rate", 0.40, 0.04),
+            new FundFeeRule("10086", "buy", "amount >= 5000000", "fixed", 1000, 1000.0),
+            new FundFeeRule("10086", "sell", "days >= 0 && days < 7", "rate", 1.50, null),
+            new FundFeeRule("10086", "sell", "days >= 7 && days < 30", "rate", 0.50, null),
+            new FundFeeRule("10086", "sell", "days >= 30 && days < 90", "rate", 0.30, null),
+            new FundFeeRule("10086", "sell", "days >= 90", "rate", 0.00, null),
+            new FundFeeRule("107632", "buy", "true", "rate", 0.50, null),
+            new FundFeeRule("107632", "sell", "true", "rate", 0.20, null)
+        );
+    }
+}
+
+public class FundFeeRuleEvaluator {
+    public static void main(String[] args) {
+        FundFeeRuleManager manager = new FundFeeRuleManager();
+        manager.loadRulesToCache();
+
+        String fundCode = "10086";
+        String transactionType = "buy";
+        double amount = 1500000; // 示例买入金额
+        int days = 0; // 示例持有天数
+
+        // 计算费用
+        double fee = manager.calculateFeeForTransaction(fundCode, transactionType, amount, days);
+        System.out.println("最终计算的费用: " + fee);
+    }
+}
