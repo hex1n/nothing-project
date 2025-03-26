@@ -25,10 +25,8 @@ public class NothingDemoApplication {
     @Bean
     public ApplicationListener<ApplicationReadyEvent> readyListener() {
         return event -> {
-            // 获取当前进程ID
             String processName = ManagementFactory.getRuntimeMXBean().getName();
             String processId = processName.split("@")[0];
-            // 打印进程ID到控制台
             log.info("======NothingDemoApplication success started PID:{}", processId);
         };
     }

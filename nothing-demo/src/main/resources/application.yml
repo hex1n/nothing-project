@@ -44,7 +44,10 @@ canal:
 
 logging:
   level:
-    root: info
+    root: INFO
+    com.hexin.demo: DEBUG
+  file:
+    name: ./logs/nothing-demo.log
 
 debezium:
   database:
@@ -55,11 +58,20 @@ debezium:
     port: 3306
     username: root
     password: mysql123
-#    offset-path: debezium/dlwlrma/offset.dat
-#    history-path: debezium/dlwlrma/dbhistory.dat
+    #    offset-path: debezium/dlwlrma/offset.dat
+    #    history-path: debezium/dlwlrma/dbhistory.dat
     table:
       - test.t_post
     column:
 #      - test.t_post.post_name
+
+flink:
+  cdc:
+    database: test
+    port: 3306
+    hostname: 127.0.0.1
+    password: mysql123
+    table: t_test
+    username: root
 
 

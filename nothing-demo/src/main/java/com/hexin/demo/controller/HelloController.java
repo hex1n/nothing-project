@@ -1,6 +1,7 @@
 package com.hexin.demo.controller;
 
 import com.google.common.collect.Lists;
+import com.hexin.demo.executor.TracerExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +39,15 @@ public class HelloController {
         return "";
     }
 
+    @RequestMapping("/testTracer")
+    public void testTracer() throws IOException {
+        try {
+            TracerExecutor.runAsync(() -> System.out.println("8888888888"));
+        } catch (Exception e) {
+            log.error("testTracer error:", e);
+        }
+    }
+
 
     @Autowired
     Executor commentAsync;
@@ -61,7 +71,7 @@ public class HelloController {
         AtomicInteger count = new AtomicInteger();
         while (count.get() < 5) {
             count.incrementAndGet();
-            log.info("============={}",count.get());
+            log.info("============={}", count.get());
         }
     }
 

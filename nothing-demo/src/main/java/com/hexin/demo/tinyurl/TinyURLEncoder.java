@@ -60,9 +60,5 @@ public class TinyURLEncoder {
         System.out.println("Decimal ID: " + decimalId);
         System.out.println("Encoded Base-58: " + encoded);
         System.out.println("Decoded back to Decimal ID: " + decoded);
-
-        String encoded1 = encodeBase58(17L);
-        System.out.println(encoded1);
-
     }
 }

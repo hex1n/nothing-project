@@ -112,7 +112,11 @@
             <artifactId>QLExpress</artifactId>
             <version>3.3.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-trace</artifactId>
+            <version>8.8.0</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -125,6 +129,11 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-trace</artifactId>
+                <version>8.8.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
