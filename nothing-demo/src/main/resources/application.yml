@@ -68,10 +68,10 @@ debezium:
 flink:
   cdc:
     database: test
-    port: 3306
+    port: 2881
     hostname: 127.0.0.1
-    password: mysql123
-    table: t_test
+    password: root123
+    table: test.t_user
     username: root
 
 
