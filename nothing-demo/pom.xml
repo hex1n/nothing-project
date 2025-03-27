@@ -130,66 +130,72 @@
             <version>3.3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.ververica</groupId>
+            <artifactId>flink-connector-oceanbase-cdc</artifactId>
+            <version>2.4.1</version>
+        </dependency>
+
         <!-- Flink Dependencies -->
         <!-- Update existing Flink dependencies to stable version -->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-streaming-java</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-clients</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
 
         <!-- Add these new dependencies -->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-core</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-java</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-base</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-runtime</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-table-api-java-bridge</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-table-common</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-table-planner_2.12</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
 
         <!-- 添加 flink-json 依赖 -->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-json</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
         </dependency>
 
         <dependency>
@@ -207,7 +213,19 @@
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-jdbc</artifactId>
-            <version>1.15.0</version>
+            <version>1.16.0</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.oceanbase</groupId>-->
+<!--            <artifactId>clogproxy-client</artifactId>-->
+<!--            <version>2.3.0</version> &lt;!&ndash; 请根据你的 Flink CDC 版本选择对应版本 &ndash;&gt;-->
+<!--        </dependency>-->
+
+        <dependency>
+
+            <groupId>com.oceanbase.logclient</groupId>
+            <artifactId>logproxy-client</artifactId>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>

@@ -1,93 +1,67 @@
 package com.hexin.demo.cdc;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.flink.api.common.JobExecutionResult;
+import com.hexin.demo.util.GsonUtils;
+import com.ververica.cdc.connectors.oceanbase.OceanBaseSource;
+import com.ververica.cdc.connectors.oceanbase.table.OceanBaseDeserializationSchema;
+import com.ververica.cdc.connectors.oceanbase.table.OceanBaseRecord;
+import com.ververica.cdc.connectors.oceanbase.table.StartupMode;
+import org.apache.flink.api.common.typeinfo.TypeHint;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.table.api.EnvironmentSettings;
-import org.apache.flink.table.api.TableEnvironment;
+import org.apache.flink.util.Collector;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 @Component
-@Slf4j
 public class FlinkCdcListener {
 
     @Resource
     private FlinkCdcConfig flinkCdcConfig;
 
-    private StreamExecutionEnvironment env;
-    private JobExecutionResult jobExecutionResult;
-
     @PostConstruct
-    public void init() throws Exception {
+    public void start() throws Exception {
         // 创建 Flink 执行环境
-        env = StreamExecutionEnvironment.getExecutionEnvironment();
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        //SourceFunction<String> oceanBaseSource =
-        //        OceanBaseSource.<String>builder()
-        //                .startupOptions(StartupOptions.initial())
-        //                .hostname(flinkCdcConfig.getHostname())
-        //                .port(flinkCdcConfig.getPort())
-        //                .username(flinkCdcConfig.getUsername())
-        //                .password(flinkCdcConfig.getPassword())
-        //                .compatibleMode("mysql")
-        //                .jdbcDriver("com.mysql.cj.jdbc.Driver")
-        //                .tenantName("sys")
-        //                .databaseName("^test$")
-        //                .tableName("^t_user$")
-        //                .logProxyHost("172.18.0.2")
-        //                .logProxyPort(2882)
-        //                .rsList("127.0.0.1:2882:2881")
-        //                .serverTimeZone("+08:00")
-        //                .deserializer(new DebeziumDeserializationSchema<String>() {
-        //                    @Override
-        //                    public void deserialize(SourceRecord sourceRecord, Collector<String> collector) throws Exception {
-        //                        System.out.println(GsonUtils.toJSONString(sourceRecord)+"ppppppppppppp");
-        //                    }
-        //
-        //                    @Override
-        //                    public TypeInformation<String> getProducedType() {
-        //                        return TypeInformation.of(String.class);
-        //                    }
-        //                })
-        //                .build();
-        // enable checkpoint
-        //env.enableCheckpointing(3000);
+        // 配置 OceanBase CDC 源
+        DataStream<String> sourceStream = env
+                .addSource(OceanBaseSource.<String>builder()
+                        .hostname(flinkCdcConfig.getHostname())  // OceanBase 地址
+                        .port(2881)           // MySQL 模式的端口
+                        .username(flinkCdcConfig.getUsername()) // OceanBase 用户名
+                        .password(flinkCdcConfig.getPassword()) // 密码
+                        .databaseName(flinkCdcConfig.getDatabase())     // 监听的数据库
+                        //.tableList(flinkCdcConfig.getTable()) // 监听的表
+                        .tenantName("sys")
+                        .startupMode(StartupMode.INITIAL)
+                        .compatibleMode("acd")
+                        .jdbcDriver("com.mysql.jdbc.Driver")
+                        .deserializer(new OceanBaseDeserializationSchema() {
+                            @Override
+                            public TypeInformation getProducedType() {
+                                return TypeInformation.of(new TypeHint<OceanBaseRecord>() {});
+                            }
 
-        EnvironmentSettings settings = EnvironmentSettings.newInstance().build();
-        TableEnvironment tableEnv = TableEnvironment.create(settings);
+                            @Override
+                            public void deserialize(OceanBaseRecord oceanBaseRecord, Collector collector) throws Exception {
+                                System.out.println(GsonUtils.toJSONString(oceanBaseRecord)+"ooooooooooo");
+                            }
+                        }) // 反序列化为 JSON
+                        .serverTimeZone("UTC")
+                        //.dialect(OceanBaseDialect.MYSQL) // OceanBase MySQL 模式
+                        .tableName(flinkCdcConfig.getTable())
+                        .build());
 
-        String createTableSQL = "CREATE TABLE t_user (" +
-                "  id INT NOT NULL," +  // 使用 INT
-                "  name STRING," +  // 使用 STRING，去掉 DEFAULT NULL
-                "  age INT," +  // 使用 INT，去掉 DEFAULT NULL
-                "  PRIMARY KEY (id) NOT ENFORCED" +  // 主键定义
-                ") WITH (" +
-                "  'connector' = 'oceanbase-cdc'," +
-                "  'scan.startup.mode' = 'initial'," +
-                "  'username' = 'root'," +
-                "  'password' = 'root123'," +
-                "  'tenant-name' = 'sys'," +
-                "  'database-name' = 'test'," +
-                "  'table-name' = 't_user'," +
-                "  'hostname' = '127.0.0.1'," +
-                "  'port' = '2881'," +
-                "  'rootserver-list' = '127.0.0.1:2882:2881'," +
-                "  'logproxy.host' = '127.0.0.1'," +
-                "  'logproxy.port' = '2983'" +
-                ");";
+        // 处理数据流
+        sourceStream.map(data -> {
+            System.out.println("收到数据变更：" + data);
+            return data;
+        });
 
-
-        tableEnv.executeSql(createTableSQL);
-
-        // 从表 t_user 中读取快照数据和 binlog 数据
-        String selectSQL = "SELECT * FROM t_user";
-        tableEnv.executeSql(selectSQL);
-        //env.addSource(oceanBaseSource).print().setParallelism(1);
-        //env.execute("Print OceanBase Snapshot + Change Events");
-
-
+        // 启动 Flink 任务
+        env.execute("Flink CDC Listener for OceanBase");
     }
 }

@@ -5,9 +5,9 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 
 //@Component
 public class FlinkCdcHealthIndicator implements HealthIndicator {
-    private final FlinkCdcListener cdcListener;
+    private final FlinkCdcListener1 cdcListener;
 
-    public FlinkCdcHealthIndicator(FlinkCdcListener cdcListener) {
+    public FlinkCdcHealthIndicator(FlinkCdcListener1 cdcListener) {
         this.cdcListener = cdcListener;
     }
 
