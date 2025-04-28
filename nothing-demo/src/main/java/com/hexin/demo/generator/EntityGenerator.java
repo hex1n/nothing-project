@@ -1,75 +1,41 @@
 package com.hexin.demo.generator;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.Map;
 
 @Slf4j
-public class EntityGenerator {
-    private final Configuration configuration;
-    private final GeneratorConfig config;
-
+public class EntityGenerator extends AbstractGenerator {
+    
     public EntityGenerator(GeneratorConfig config) {
-        this.config = config;
-        this.configuration = new Configuration(Configuration.VERSION_2_3_31);
-        configuration.setClassForTemplateLoading(this.getClass(), "/templates");
+        super(config);
     }
-
-    private String convertToCamelCase(String tableName) {
-        StringBuilder result = new StringBuilder();
-        boolean nextUpper = true;
-
-        for (char c : tableName.toCharArray()) {
-            if (c == '_') {
-                nextUpper = true;
-            } else {
-                if (nextUpper) {
-                    result.append(Character.toUpperCase(c));
-                    nextUpper = false;
-                } else {
-                    result.append(Character.toLowerCase(c));
-                }
-            }
-        }
-        return result.toString();
-    }
-
+    
+    /**
+     * 生成实体类
+     * @param tableInfo 表信息
+     */
     public void generateEntity(TableInfo tableInfo) {
         try {
-            Template template = configuration.getTemplate("entity.ftl");
+            log.info("开始生成实体类: {}", tableInfo.getTableName());
             
-            String className = convertToCamelCase(tableInfo.getTableName());
-            Map<String, Object> dataModel = new HashMap<>();
-            dataModel.put("package", config.getPackageConfig());
-            dataModel.put("className", className);
-            dataModel.put("tableName", tableInfo.getTableName());
-            dataModel.put("columns", tableInfo.getColumns());
-            dataModel.put("strategyConfig", config.getStrategyConfig());
-
+            // 创建数据模型
+            Map<String, Object> dataModel = createBaseDataModel(tableInfo);
+            
+            // 生成输出路径
             String outputPath = config.getPackageConfig().getOutputDir() + "/" +
-                              config.getPackageConfig().getEntityPackage().replace(".", "/") +
-                              "/" + className + ".java";
-
-            File file = new File(outputPath);
-            File parentDir = file.getParentFile();
-            if (!parentDir.exists()) {
-                boolean dirCreated = parentDir.mkdirs();
-                if (!dirCreated) {
-                    throw new RuntimeException("Failed to create directory: " + parentDir.getAbsolutePath());
-                }
-            }
-
-            try (Writer writer = new FileWriter(outputPath)) {
-                template.process(dataModel, writer);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to generate entity", e);
+                config.getPackageConfig().getEntityPackage().replace(".", "/") +
+                "/" + tableInfo.getClassName() + ".java";
+            
+            // 渲染模板
+            renderTemplate("entity.ftl", dataModel, outputPath);
+            
+            log.info("实体类生成完成: {}", tableInfo.getClassName());
+        } catch (IOException | TemplateException e) {
+            log.error("生成实体类失败: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to generate entity: " + tableInfo.getClassName(), e);
         }
     }
 }

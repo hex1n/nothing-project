@@ -1,5 +1,6 @@
 package com.hexin.demo.generator;
 
+import com.hexin.demo.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Types;
@@ -67,31 +68,33 @@ public class TypeConversionUtils {
         DB_TYPE_TO_JAVA_TYPE.put("DATETIME", "java.time.LocalDateTime");
         DB_TYPE_TO_JAVA_TYPE.put("TIMESTAMP", "java.time.LocalDateTime");
         DB_TYPE_TO_JAVA_TYPE.put("YEAR", "Integer");
-        DB_TYPE_TO_JAVA_TYPE.put("BINARY", "byte[]");
-        DB_TYPE_TO_JAVA_TYPE.put("VARBINARY", "byte[]");
-        DB_TYPE_TO_JAVA_TYPE.put("TINYBLOB", "byte[]");
-        DB_TYPE_TO_JAVA_TYPE.put("BLOB", "byte[]");
-        DB_TYPE_TO_JAVA_TYPE.put("MEDIUMBLOB", "byte[]");
-        DB_TYPE_TO_JAVA_TYPE.put("LONGBLOB", "byte[]");
     }
     
     /**
      * 根据JDBC类型或数据库特定类型获取Java类型
      */
     public static String getJavaType(String dataType) {
-        if (dataType == null || dataType.isEmpty()) {
+        if (StringUtils.isEmpty(dataType)) {
             return "Object";
         }
         
+        // 处理带有括号的类型，如VARCHAR(255)
+        String rawType = dataType;
+        int parenIndex = dataType.indexOf('(');
+        if (parenIndex > 0) {
+            rawType = dataType.substring(0, parenIndex);
+        }
+        rawType = rawType.trim().toUpperCase();
+        
         // 尝试先按数据库特定类型匹配
-        String javaType = DB_TYPE_TO_JAVA_TYPE.get(dataType.toUpperCase());
+        String javaType = DB_TYPE_TO_JAVA_TYPE.get(rawType);
         if (javaType != null) {
             return javaType;
         }
         
         // 尝试按JDBC类型代码匹配
         try {
-            int jdbcType = Integer.parseInt(dataType);
+            int jdbcType = Integer.parseInt(rawType);
             javaType = SQL_TYPE_TO_JAVA_TYPE.get(jdbcType);
             if (javaType != null) {
                 return javaType;
@@ -100,7 +103,11 @@ public class TypeConversionUtils {
             // 忽略转换异常
         }
         
-        // 默认返回Object
+        // 特殊处理tinyint(1)为Boolean
+        if (rawType.equals("TINYINT") && dataType.contains("(1)")) {
+            return "Boolean";
+        }
+        
         log.warn("未能识别的数据类型: {}, 将使用Object类型", dataType);
         return "Object";
     }

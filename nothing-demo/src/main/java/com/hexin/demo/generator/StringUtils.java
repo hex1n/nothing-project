@@ -2,10 +2,17 @@ package com.hexin.demo.util;
 
 public class StringUtils {
     /**
+     * 判断字符串是否为空
+     */
+    public static boolean isEmpty(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+    
+    /**
      * 转换为帕斯卡命名（首字母大写的驼峰命名）
      */
     public static String toPascalCase(String input) {
-        if (input == null || input.isEmpty()) {
+        if (isEmpty(input)) {
             return input;
         }
         
@@ -13,7 +20,7 @@ public class StringUtils {
         boolean nextUpper = true;
         
         for (char c : input.toCharArray()) {
-            if (c == '_' || c == ' ' || c == '-') {
+            if (c == '_' || c == ' ' || c == '-' || !Character.isLetterOrDigit(c)) {
                 nextUpper = true;
             } else {
                 if (nextUpper) {
@@ -33,16 +40,9 @@ public class StringUtils {
      */
     public static String toCamelCase(String input) {
         String pascal = toPascalCase(input);
-        if (pascal == null || pascal.isEmpty()) {
-            return pascal;
+        if (isEmpty(pascal) || pascal.length() <= 1) {
+            return pascal != null ? pascal.toLowerCase() : pascal;
         }
         return Character.toLowerCase(pascal.charAt(0)) + pascal.substring(1);
-    }
-    
-    /**
-     * 检查字符串是否为空
-     */
-    public static boolean isEmpty(String str) {
-        return str == null || str.trim().isEmpty();
     }
 }
