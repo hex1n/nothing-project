@@ -14,6 +14,7 @@ public class ColumnInfo {
     private String propertyName;
     private String dataType;
     private String javaType;
+    private String jdbcType;
     private Integer columnSize;
     private Boolean nullable;
     private String comment;

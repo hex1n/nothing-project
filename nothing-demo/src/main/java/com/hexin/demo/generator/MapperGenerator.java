@@ -57,13 +57,10 @@ public class MapperGenerator extends AbstractGenerator {
         // 创建数据模型
         Map<String, Object> dataModel = createBaseDataModel(tableInfo);
         
-        // 创建输出目录
-        String outputDir = "src/main/resources/mapper/";
-        
         // 生成输出路径
-        String outputPath = outputDir + tableInfo.getClassName() + "Mapper.xml";
-        
+        String relativePath = "resources/mappers/" + tableInfo.getClassName() + "Mapper.xml";
+
         // 渲染模板
-        renderTemplate("mapper.xml.ftl", dataModel, outputPath);
+        renderTemplate("mapper.xml.ftl", dataModel, relativePath);
     }
 }

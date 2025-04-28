@@ -111,4 +111,61 @@ public class TypeConversionUtils {
         log.warn("未能识别的数据类型: {}, 将使用Object类型", dataType);
         return "Object";
     }
+    
+    /**
+     * 获取字段的JDBC类型
+     */
+    public static String getJdbcType(String sqlType) {
+        if (StringUtils.isEmpty(sqlType)) {
+            return "VARCHAR";
+        }
+        
+        // 提取类型名（去除大小、精度等信息）
+        String typeName = sqlType.toUpperCase();
+        int parenIndex = typeName.indexOf('(');
+        if (parenIndex > 0) {
+            typeName = typeName.substring(0, parenIndex);
+        }
+        
+        switch (typeName) {
+            case "CHAR":
+            case "VARCHAR":
+            case "TINYTEXT":
+            case "TEXT":
+            case "MEDIUMTEXT":
+            case "LONGTEXT":
+                return "VARCHAR";
+            case "INT":
+            case "INTEGER":
+            case "TINYINT":
+            case "SMALLINT":
+            case "MEDIUMINT":
+                return "INTEGER";
+            case "BIGINT":
+                return "BIGINT";
+            case "DECIMAL":
+                return "DECIMAL";
+            case "FLOAT":
+                return "FLOAT";
+            case "DOUBLE":
+                return "DOUBLE";
+            case "BIT":
+            case "BOOLEAN":
+                return "BOOLEAN";
+            case "DATE":
+                return "DATE";
+            case "TIME":
+                return "TIME";
+            case "DATETIME":
+            case "TIMESTAMP":
+                return "TIMESTAMP";
+            case "BLOB":
+            case "TINYBLOB":
+            case "MEDIUMBLOB":
+            case "LONGBLOB":
+                return "BLOB";
+            default:
+                return "VARCHAR";
+        }
+    }
 }

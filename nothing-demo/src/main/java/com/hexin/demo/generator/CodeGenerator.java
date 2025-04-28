@@ -43,10 +43,11 @@ public class CodeGenerator extends AbstractGenerator {
     public void generate(String tableName) {
         try {
             log.info("开始生成表 {} 的代码", tableName);
-
+            
             // 获取表信息
             TableInfo tableInfo = getTableInfo(tableName);
-
+            log.info("成功获取表信息：{}", tableInfo);
+            
             // 并行生成各类代码
             CompletableFuture<Void> entityFuture = CompletableFuture.runAsync(
                     () -> entityGenerator.generateEntity(tableInfo), generatorExecutor);
@@ -62,7 +63,7 @@ public class CodeGenerator extends AbstractGenerator {
 
             log.info("表 {} 的代码生成完成", tableName);
         } catch (Exception e) {
-            log.error("生成表 {} 的代码失败: {}", tableName, e.getMessage(), e);
+            log.error("生成表 {} 的代码失败: {}，详细堆栈信息：", tableName, e.getMessage(), e);
             throw new CodeGenerationException("Failed to generate code for table: " + tableName, e);
         }
     }
@@ -142,6 +143,7 @@ public class CodeGenerator extends AbstractGenerator {
                         .propertyName(propertyName)
                         .dataType(column.getDataType())
                         .javaType(javaType)
+                        .jdbcType(TypeConversionUtils.getJdbcType(column.getDataType()))  // 设置JDBC类型
                         .columnSize(column.getColumnSize())
                         .nullable(column.getNullable())
                         .comment(column.getComment())

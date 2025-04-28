@@ -2,13 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${mapperPackage}.${className}Mapper">
 
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="${entityPackage}.${className}">
+        <#list columns as column>
+        <#if column.isPrimaryKey>
+        <id column="${column.columnName}" property="${column.propertyName}" jdbcType="${column.jdbcType!'VARCHAR'}" />
+        <#else>
+        <result column="${column.columnName}" property="${column.propertyName}" jdbcType="${column.jdbcType!'VARCHAR'}" />
+        </#if>
+        </#list>
+    </resultMap>
+
     <!-- 基础列 -->
     <sql id="Base_Column_List">
         <#list columns as column>${column.columnName}<#if column_has_next>, </#if></#list>
     </sql>
 
     <!-- 根据ID查询 -->
-    <select id="selectById" resultType="${entityPackage}.${className}">
+    <select id="selectById" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM ${tableName}
@@ -16,7 +27,7 @@
     </select>
 
     <!-- 批量查询 -->
-    <select id="selectByIds" resultType="${entityPackage}.${className}">
+    <select id="selectByIds" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM ${tableName}
@@ -27,7 +38,7 @@
     </select>
 
     <!-- 条件查询 -->
-    <select id="selectByCondition" resultType="${entityPackage}.${className}" parameterType="${entityPackage}.${className}">
+    <select id="selectByCondition" resultMap="BaseResultMap" parameterType="${entityPackage}.${className}">
         SELECT
         <include refid="Base_Column_List"/>
         FROM ${tableName}
