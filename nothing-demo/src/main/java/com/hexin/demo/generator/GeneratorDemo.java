@@ -14,7 +14,7 @@ public class GeneratorDemo {
                         .build())
                 .packageConfig(GeneratorConfig.PackageConfig.builder()
                         .basePackage("com.hexin.demo")
-                        .outputDir("src/main/java")
+                        .outputDir("./generated-code")
                         .entityPackage("com.hexin.demo.entity")
                         .mapperPackage("com.hexin.demo.mapper")
                         .servicePackage("com.hexin.demo.service")
